@@ -40,11 +40,8 @@ export default function DashboardPage({ onSelectSubject, onAdmin, onLogout, isGu
   }
 
   const buildLocalStats = useCallback(async (subjects = localSubjects) => {
-    const questionIds = subjects.flatMap(subject =>
-      getLocalQuestions(subject.id).map(question => question.id)
-    );
     const localAnswerMap = new Map(
-      Array.from((await loadProgressAnswers(userId, isGuest, questionIds)).entries())
+      Array.from((await loadProgressAnswers(userId, isGuest)).entries())
         .map(([id, answer]) => [id, answer.is_correct] as const)
     );
 

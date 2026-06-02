@@ -5,45 +5,10 @@ const guestCookiePrefix = 'gmdc-guest-answers';
 const guestCookieChunkCount = `${guestCookiePrefix}-chunks`;
 const guestCookieMaxAge = 60 * 60 * 24 * 14;
 const guestCookieChunkSize = 3000;
-
-type StoredAccountAnswer = {
-  id: string;
-  user_id: string;
-  question_id: string;
-  selected_answer: string;
-  is_correct: boolean;
-  answered_at: string;
-};
+const accountMetadataKey = 'gmdc_progress_v1';
 
 function getStorageKey(userId: string) {
   return `${storagePrefix}:${userId}`;
-}
-
-function toAccountAnswer(answer: UserAnswer) {
-  return {
-    user_id: answer.user_id,
-    question_id: answer.question_id,
-    selected_answer: answer.selected_answer,
-    is_correct: answer.is_correct,
-    answered_at: answer.answered_at,
-  };
-}
-
-function toAnswerMap(answers: StoredAccountAnswer[]) {
-  const answerMap = new Map<string, UserAnswer>();
-
-  answers.forEach(answer => {
-    answerMap.set(answer.question_id, {
-      id: answer.id,
-      user_id: answer.user_id,
-      question_id: answer.question_id,
-      selected_answer: answer.selected_answer,
-      is_correct: answer.is_correct,
-      answered_at: answer.answered_at,
-    });
-  });
-
-  return answerMap;
 }
 
 function mergeAnswerMaps(base: Map<string, UserAnswer>, incoming: Map<string, UserAnswer>) {
@@ -57,6 +22,23 @@ function mergeAnswerMaps(base: Map<string, UserAnswer>, incoming: Map<string, Us
   });
 
   return merged;
+}
+
+function filterAnswersByQuestionIds(answers: Map<string, UserAnswer>, questionIds?: string[]) {
+  if (!questionIds || questionIds.length === 0) return answers;
+
+  const questionIdSet = new Set(questionIds);
+  const filteredAnswers = new Map<string, UserAnswer>();
+  answers.forEach((answer, questionId) => {
+    if (questionIdSet.has(questionId)) filteredAnswers.set(questionId, answer);
+  });
+
+  return filteredAnswers;
+}
+
+function deleteAnswers(answers: Map<string, UserAnswer>, questionIdSet: Set<string>) {
+  questionIdSet.forEach(questionId => answers.delete(questionId));
+  return answers;
 }
 
 function readCookie(name: string) {
@@ -111,14 +93,17 @@ function splitQuestionId(questionId: string) {
   };
 }
 
-function packGuestAnswers(answers: Map<string, UserAnswer>) {
+function packAnswers(answers: Map<string, UserAnswer>) {
   const prefixes: string[] = [];
   const prefixIndexes = new Map<string, number>();
 
   const records = Array.from(answers.values())
+    .sort((a, b) => a.question_id.localeCompare(b.question_id))
     .map(answer => {
       const { prefix, suffix } = splitQuestionId(answer.question_id);
       let prefixIndex = prefixIndexes.get(prefix);
+      const timestamp = new Date(answer.answered_at).getTime();
+      const packedTime = Number.isFinite(timestamp) ? timestamp.toString(36) : Date.now().toString(36);
 
       if (prefixIndex === undefined) {
         prefixIndex = prefixes.length;
@@ -131,6 +116,7 @@ function packGuestAnswers(answers: Map<string, UserAnswer>) {
         suffix,
         answer.selected_answer,
         answer.is_correct ? '1' : '0',
+        packedTime,
       ].join(',');
     })
     .join(';');
@@ -138,7 +124,7 @@ function packGuestAnswers(answers: Map<string, UserAnswer>) {
   return `${prefixes.join('|')}#${records}`;
 }
 
-function unpackGuestAnswers(packed: string) {
+function unpackAnswers(packed: string, userId: string) {
   const answers = new Map<string, UserAnswer>();
   if (!packed) return answers;
 
@@ -147,20 +133,24 @@ function unpackGuestAnswers(packed: string) {
     const prefixes = prefixChunk ? prefixChunk.split('|') : [''];
 
     records.split(';').forEach(item => {
-      const [packedPrefixIndex, suffix, selectedAnswer, correctFlag] = item.split(',');
+      const [packedPrefixIndex, suffix, selectedAnswer, correctFlag, packedTime] = item.split(',');
       if (!suffix || !selectedAnswer) return;
 
       const prefixIndex = Number.parseInt(packedPrefixIndex || '', 36);
       const prefix = Number.isFinite(prefixIndex) ? prefixes[prefixIndex] : '';
       const questionId = prefix ? `${prefix}-q-${suffix}` : suffix;
+      const timestamp = Number.parseInt(packedTime || '', 36);
+      const answeredAt = Number.isFinite(timestamp)
+        ? new Date(timestamp).toISOString()
+        : new Date().toISOString();
 
       answers.set(questionId, {
-        id: `guest-${questionId}`,
-        user_id: 'guest',
+        id: `${userId}-${questionId}`,
+        user_id: userId,
         question_id: questionId,
         selected_answer: selectedAnswer,
         is_correct: correctFlag === '1',
-        answered_at: new Date().toISOString(),
+        answered_at: answeredAt,
       });
     });
 
@@ -177,8 +167,8 @@ function unpackGuestAnswers(packed: string) {
       : new Date().toISOString();
 
     answers.set(questionId, {
-      id: `guest-${questionId}`,
-      user_id: 'guest',
+      id: `${userId}-${questionId}`,
+      user_id: userId,
       question_id: questionId,
       selected_answer: selectedAnswer,
       is_correct: correctFlag === '1',
@@ -198,7 +188,7 @@ export function loadGuestAnswers() {
     packed += readCookie(`${guestCookiePrefix}-${index}`);
   }
 
-  return unpackGuestAnswers(packed);
+  return unpackAnswers(packed, 'guest');
 }
 
 function saveGuestAnswers(answers: Map<string, UserAnswer>) {
@@ -206,7 +196,7 @@ function saveGuestAnswers(answers: Map<string, UserAnswer>) {
 
   if (answers.size === 0) return;
 
-  const packed = packGuestAnswers(answers);
+  const packed = packAnswers(answers);
   const chunks = packed.match(new RegExp(`.{1,${guestCookieChunkSize}}`, 'g')) || [];
 
   chunks.forEach((chunk, index) => {
@@ -253,55 +243,65 @@ export function saveLocalAnswer(userId: string | null | undefined, answer: UserA
   saveLocalAnswers(userId, answers);
 }
 
-async function loadAccountAnswers(userId: string, questionIds?: string[]) {
-  const browserAnswers = mergeAnswerMaps(loadLocalAnswers(userId), loadGuestAnswers());
+async function loadAccountMetadataAnswers(userId: string) {
+  if (!hasSupabaseConfig) return new Map<string, UserAnswer>();
 
-  if (!hasSupabaseConfig) return browserAnswers;
-
-  let query = supabase
-    .from('local_user_answers')
-    .select('*')
-    .eq('user_id', userId);
-
-  if (questionIds && questionIds.length > 0) {
-    query = query.in('question_id', questionIds);
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data.user || data.user.id !== userId) {
+    if (error) console.warn('Não foi possível carregar o progresso da conta.', error.message);
+    return new Map<string, UserAnswer>();
   }
 
-  const { data, error } = await query;
-  if (error) {
-    console.warn('Não foi possível carregar o progresso da conta.', error.message);
-    return browserAnswers;
-  }
-
-  const accountAnswers = toAnswerMap((data || []) as StoredAccountAnswer[]);
-  const mergedAnswers = mergeAnswerMaps(accountAnswers, browserAnswers);
-  saveLocalAnswers(userId, mergedAnswers);
-
-  const browserAnswersToSync = Array.from(browserAnswers.values());
-  if (browserAnswersToSync.length > 0) {
-    await supabase
-      .from('local_user_answers')
-      .upsert(
-        browserAnswersToSync.map(answer => toAccountAnswer({ ...answer, user_id: userId })),
-        { onConflict: 'user_id,question_id' }
-      );
-  }
-
-  return mergedAnswers;
+  const packed = data.user.user_metadata?.[accountMetadataKey];
+  return typeof packed === 'string' ? unpackAnswers(packed, userId) : new Map<string, UserAnswer>();
 }
 
-async function saveAccountAnswer(userId: string, answer: UserAnswer) {
-  saveLocalAnswer(userId, answer);
-
+async function saveAccountMetadataAnswers(userId: string, answers: Map<string, UserAnswer>) {
   if (!hasSupabaseConfig) return;
 
-  const { error } = await supabase
-    .from('local_user_answers')
-    .upsert(toAccountAnswer({ ...answer, user_id: userId }), { onConflict: 'user_id,question_id' });
+  const { data, error: getError } = await supabase.auth.getUser();
+  if (getError || !data.user || data.user.id !== userId) {
+    if (getError) console.warn('Não foi possível salvar o progresso da conta.', getError.message);
+    return;
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    data: {
+      ...data.user.user_metadata,
+      [accountMetadataKey]: packAnswers(answers),
+    },
+  });
 
   if (error) {
     console.warn('Não foi possível salvar o progresso da conta.', error.message);
   }
+}
+
+async function loadAccountAnswers(userId: string, questionIds?: string[]) {
+  const localAnswers = loadLocalAnswers(userId);
+  const guestAnswers = loadGuestAnswers();
+  const accountAnswers = await loadAccountMetadataAnswers(userId);
+  const mergedAnswers = mergeAnswerMaps(
+    mergeAnswerMaps(guestAnswers, accountAnswers),
+    localAnswers
+  );
+
+  saveLocalAnswers(userId, mergedAnswers);
+
+  if (packAnswers(mergedAnswers) !== packAnswers(accountAnswers)) {
+    await saveAccountMetadataAnswers(userId, mergedAnswers);
+  }
+
+  return filterAnswersByQuestionIds(mergedAnswers, questionIds);
+}
+
+async function saveAccountAnswer(userId: string, answer: UserAnswer) {
+  const accountAnswers = await loadAccountAnswers(userId);
+  const answers = new Map(accountAnswers);
+
+  answers.set(answer.question_id, { ...answer, user_id: userId });
+  saveLocalAnswers(userId, answers);
+  await saveAccountMetadataAnswers(userId, answers);
 }
 
 export async function loadProgressAnswers(
@@ -344,19 +344,15 @@ export async function resetProgressAnswers(
 
   if (!userId) return;
 
-  const answers = loadLocalAnswers(userId);
-  questionIdSet.forEach(questionId => answers.delete(questionId));
-  saveLocalAnswers(userId, answers);
+  const localAnswers = deleteAnswers(loadLocalAnswers(userId), questionIdSet);
+  const guestAnswers = deleteAnswers(loadGuestAnswers(), questionIdSet);
+  const accountAnswers = deleteAnswers(await loadAccountMetadataAnswers(userId), questionIdSet);
+  const mergedAnswers = mergeAnswerMaps(
+    mergeAnswerMaps(guestAnswers, accountAnswers),
+    localAnswers
+  );
 
-  if (!hasSupabaseConfig || questionIds.length === 0) return;
-
-  const { error } = await supabase
-    .from('local_user_answers')
-    .delete()
-    .eq('user_id', userId)
-    .in('question_id', questionIds);
-
-  if (error) {
-    console.warn('Não foi possível resetar o progresso da conta.', error.message);
-  }
+  saveLocalAnswers(userId, mergedAnswers);
+  saveGuestAnswers(guestAnswers);
+  await saveAccountMetadataAnswers(userId, mergedAnswers);
 }
