@@ -4,8 +4,11 @@ import { useAuth } from './contexts/useAuth';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import StudyPage from './pages/StudyPage';
+import LibrasStudyPage from './pages/LibrasStudyPage';
+import LibrasInverseStudyPage from './pages/LibrasInverseStudyPage';
 import AdminPage from './pages/AdminPage';
 import { Subject } from './lib/supabase';
+import { librasInverseSubjectId, librasSubjectId } from './data/librasCards';
 
 type Page = 'auth' | 'dashboard' | 'study' | 'admin';
 
@@ -57,6 +60,26 @@ function AppInner() {
   }
 
   if (page === 'study' && selectedSubject) {
+    if (selectedSubject.id === librasSubjectId) {
+      return (
+        <LibrasStudyPage
+          subject={selectedSubject}
+          onBack={() => setPage('dashboard')}
+          isGuest={effectiveIsGuest}
+        />
+      );
+    }
+
+    if (selectedSubject.id === librasInverseSubjectId) {
+      return (
+        <LibrasInverseStudyPage
+          subject={selectedSubject}
+          onBack={() => setPage('dashboard')}
+          isGuest={effectiveIsGuest}
+        />
+      );
+    }
+
     return (
       <StudyPage
         subject={selectedSubject}

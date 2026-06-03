@@ -1,4 +1,5 @@
 import { Question, QuestionOption, Subject } from '../lib/supabase';
+import { librasCards, librasInverseCards, librasInverseSubject, librasSubject } from './librasCards';
 
 export type QuestionWithOptions = Question & { options: QuestionOption[] };
 
@@ -9,6 +10,30 @@ type RawQuestion = [number, string, string, string[]];
 type RawSubject = { id: string; name: string; teacher_name: string; description: string; questions: RawQuestion[] };
 
 const rawSubjects: RawSubject[] = [
+  {
+    id: librasSubject.id,
+    name: librasSubject.name,
+    teacher_name: librasSubject.teacher_name,
+    description: librasSubject.description,
+    questions: librasCards.map<RawQuestion>(card => [
+      card.questionNumber,
+      `Simule o sinal em libras da palavra: ${card.word}`,
+      'self',
+      [],
+    ]),
+  },
+  {
+    id: librasInverseSubject.id,
+    name: librasInverseSubject.name,
+    teacher_name: librasInverseSubject.teacher_name,
+    description: librasInverseSubject.description,
+    questions: librasInverseCards.map<RawQuestion>(card => [
+      card.questionNumber,
+      `Assista ao vídeo e identifique o sinal em LIBRAS.`,
+      card.correctAnswer,
+      card.options.map(option => option.text),
+    ]),
+  },
   {
     id: "local-saude-seguranca-trabalho-etica-profissional",
     name: "Saúde e Segurança do Trabalho / Ética Profissional",

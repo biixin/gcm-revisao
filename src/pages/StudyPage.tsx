@@ -180,14 +180,14 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#050a14] flex items-center justify-center">
+      <div className="notranslate min-h-screen bg-[#050a14] flex items-center justify-center" translate="no">
         <div className="text-slate-400 text-sm">Carregando questões...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#050a14] text-white flex flex-col">
+    <div className="notranslate min-h-screen bg-[#050a14] text-white flex flex-col" translate="no">
       {/* Header */}
       <header className="bg-[#0d1a2e] border-b border-[#1a3050] sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3">
