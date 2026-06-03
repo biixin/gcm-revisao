@@ -18,6 +18,7 @@ type StudyPageProps = {
 
 export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) {
   const { user } = useAuth();
+  const userId = user?.id;
   const localSubject = isLocalSubject(subject.id);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [answers, setAnswers] = useState<Map<string, UserAnswer>>(new Map());
@@ -43,7 +44,7 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
         const localQuestions = getLocalQuestions(subject.id);
         setQuestions(localQuestions);
         setAnswers(await loadProgressAnswers(
-          user?.id,
+          userId,
           isGuest,
           localQuestions.map(question => question.id)
         ));
@@ -51,7 +52,7 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
         return;
       }
 
-      if (!user) {
+      if (!userId) {
         setQuestions([]);
         setAnswers(new Map());
         setLoading(false);
@@ -67,7 +68,7 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
       const { data: ans } = await supabase
         .from('user_answers')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', userId)
         .in('question_id', (qs || []).map(q => q.id));
 
       const ansMap = new Map<string, UserAnswer>();
@@ -78,7 +79,7 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
       setLoading(false);
     }
     load();
-  }, [isGuest, localSubject, subject.id, user]);
+  }, [isGuest, localSubject, subject.id, userId]);
 
   const questionIds = useMemo(() => new Set(questions.map(question => question.id)), [questions]);
   const subjectAnswers = useMemo(() => {
@@ -129,7 +130,7 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
     const existing = answers.get(currentQuestion.id);
     const newAnswer: UserAnswer = {
       id: existing?.id || `${localSubject ? 'local' : 'pending'}-${currentQuestion.id}`,
-      user_id: user?.id || 'guest',
+      user_id: userId || 'guest',
       question_id: currentQuestion.id,
       selected_answer: letter,
       is_correct: isCorrect,
@@ -141,12 +142,12 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
     setAnswers(prev => new Map(prev).set(currentQuestion.id, newAnswer));
 
     if (localSubject) {
-      await saveProgressAnswer(user?.id, isGuest, newAnswer);
+      await saveProgressAnswer(userId, isGuest, newAnswer);
       return;
     }
 
     if (isGuest) return;
-    if (!user) return;
+    if (!userId) return;
 
     if (existing) {
       await supabase
@@ -156,9 +157,9 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
     } else {
       await supabase
         .from('user_answers')
-        .insert({ user_id: user.id, question_id: currentQuestion.id, selected_answer: letter, is_correct: isCorrect });
+        .insert({ user_id: userId, question_id: currentQuestion.id, selected_answer: letter, is_correct: isCorrect });
     }
-  }, [answers, currentQuestion, isGuest, localSubject, revealed, user]);
+  }, [answers, currentQuestion, isGuest, localSubject, revealed, userId]);
 
   function activateGuidedMode() {
     if (guidedPassword === subject.guided_mode_password && subject.guided_mode_password !== '') {

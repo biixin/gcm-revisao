@@ -1,13 +1,35 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  Shield, BookOpen, CheckCircle, Clock, ChevronRight,
-  TrendingUp, LogOut, Settings, BarChart2, AlertCircle, RotateCcw
+  BookOpen, CheckCircle, Clock, ChevronRight,
+  TrendingUp, LogOut, Settings, BarChart2, AlertCircle, RotateCcw, AlertTriangle, ArrowUpDown
 } from 'lucide-react';
 import { useAuth } from '../contexts/useAuth';
 import { supabase, Subject } from '../lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { getLocalQuestions, isLocalSubject, localSubjects } from '../data/localQuestionBank';
 import { loadProgressAnswers, resetProgressAnswers } from '../lib/localProgress';
+import { librasInverseSubjectId, librasSubjectId } from '../data/librasCards';
+
+const logoUrl = 'https://firebasestorage.googleapis.com/v0/b/gcm-caxias-17535.firebasestorage.app/o/logo-gcm-sem%20fundo.png?alt=media&token=abcb7bfd-cecf-4101-87b9-83f942235ebd';
+
+type SortMode = 'default' | 'difficulty';
+type SubjectDifficulty = 'URUBU' | 'ALTA' | 'FÁCIL';
+
+const difficultyOrder: Record<SubjectDifficulty, number> = {
+  URUBU: 0,
+  ALTA: 1,
+  FÁCIL: 2,
+};
+
+function getSubjectDifficulty(subjectId: string): SubjectDifficulty {
+  if (subjectId === 'local-marcio-legislacao-penal-eca') return 'URUBU';
+  if (
+    subjectId === librasSubjectId ||
+    subjectId === librasInverseSubjectId ||
+    subjectId === 'local-marcelo-porte-arma-fogo'
+  ) return 'ALTA';
+  return 'FÁCIL';
+}
 
 type SubjectStats = {
   subject: Subject;
@@ -29,6 +51,7 @@ export default function DashboardPage({ onSelectSubject, onAdmin, onLogout, isGu
   const [stats, setStats] = useState<SubjectStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [resettingSubjectId, setResettingSubjectId] = useState<string | null>(null);
+  const [sortMode, setSortMode] = useState<SortMode>('difficulty');
   const userId = user?.id;
 
   async function handleLogout() {
@@ -141,6 +164,18 @@ export default function DashboardPage({ onSelectSubject, onAdmin, onLogout, isGu
   const totalQuestions = stats.reduce((a, s) => a + s.total, 0);
   const totalCorrect = stats.reduce((a, s) => a + s.correct, 0);
   const overallPct = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
+  const displayedStats = useMemo(() => {
+    if (sortMode !== 'difficulty') return stats;
+
+    return stats
+      .map((item, index) => ({ item, index }))
+      .sort((a, b) => {
+        const difficultyDelta = difficultyOrder[getSubjectDifficulty(a.item.subject.id)] - difficultyOrder[getSubjectDifficulty(b.item.subject.id)];
+        if (difficultyDelta !== 0) return difficultyDelta;
+        return a.index - b.index;
+      })
+      .map(({ item }) => item);
+  }, [sortMode, stats]);
 
   return (
     <div className="min-h-screen bg-[#050a14] text-white">
@@ -148,13 +183,13 @@ export default function DashboardPage({ onSelectSubject, onAdmin, onLogout, isGu
       <header className="bg-[#0d1a2e] border-b border-[#1a3050] sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-b from-[#1a3a6e] to-[#0d1f3c] border border-[#1e4a8a] flex items-center justify-center">
-                <Shield className="w-4 h-4 text-blue-400" strokeWidth={1.5} />
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-9 h-9 rounded-full bg-[#0a1525] border border-[#1e4a8a] flex items-center justify-center overflow-hidden shrink-0">
+                <img src={logoUrl} alt="Guarda Municipal de Duque de Caxias" className="w-8 h-8 object-contain" />
               </div>
-              <div>
-                <p className="text-white text-sm font-semibold leading-none">GMDC</p>
-                <p className="text-slate-500 text-[10px] leading-none mt-0.5">Guarda Municipal</p>
+              <div className="min-w-0">
+                <p className="text-white text-sm font-semibold leading-none truncate">Revisador de Questões</p>
+                <p className="text-slate-500 text-[10px] leading-none mt-0.5 truncate">Guarda Municipal de Duque de Caxias</p>
               </div>
             </div>
             {isGuest && (
@@ -234,9 +269,23 @@ export default function DashboardPage({ onSelectSubject, onAdmin, onLogout, isGu
 
         {/* Subject list */}
         <div>
-          <h2 className="text-slate-300 text-xs font-semibold uppercase tracking-widest mb-3 flex items-center gap-2">
-            <BookOpen className="w-3.5 h-3.5" /> Matérias
-          </h2>
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <h2 className="text-slate-300 text-xs font-semibold uppercase tracking-widest flex items-center gap-2">
+              <BookOpen className="w-3.5 h-3.5" /> Matérias
+            </h2>
+            <label className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+              <ArrowUpDown className="w-3.5 h-3.5" />
+              Ordenar
+              <select
+                value={sortMode}
+                onChange={event => setSortMode(event.target.value as SortMode)}
+                className="bg-[#0a1525] border border-[#1a3050] text-slate-300 rounded-lg px-2 py-1 text-[10px] font-semibold focus:outline-none focus:border-blue-500"
+              >
+                <option value="default">Padrão</option>
+                <option value="difficulty">Dificuldade</option>
+              </select>
+            </label>
+          </div>
 
           {loading ? (
             <div className="space-y-3">
@@ -262,17 +311,29 @@ export default function DashboardPage({ onSelectSubject, onAdmin, onLogout, isGu
             </div>
           ) : (
             <div className="space-y-3">
-              {stats.map(({ subject, total, answered, correct }) => {
+              {displayedStats.map(({ subject, total, answered, correct }) => {
                 const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
                 const isComplete = answered === total && total > 0;
                 const isStarted = answered > 0;
                 const accuracy = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+                const isLibrasSubject = subject.id === librasSubjectId || subject.id === librasInverseSubjectId;
+                const isMarcioSubject = subject.id === 'local-marcio-legislacao-penal-eca';
+                const difficulty = getSubjectDifficulty(subject.id);
+                const difficultyLabel = `Dificuldade: ${difficulty}`;
 
                 return (
                   <div key={subject.id} className="relative group">
                     <button
                       onClick={() => onSelectSubject(subject)}
-                      className="w-full bg-[#0d1a2e] border border-[#1a3050] hover:border-blue-700 rounded-2xl p-4 text-left transition-all duration-200 hover:bg-[#0f1e35]"
+                      className={`w-full border rounded-2xl p-4 text-left transition-all duration-200 ${
+                        isLibrasSubject
+                          ? 'bg-amber-950/20 border-amber-500/50 ring-1 ring-amber-400/25 hover:border-amber-400 hover:bg-amber-950/30'
+                          : isMarcioSubject
+                          ? 'bg-red-950/20 border-red-500/50 ring-1 ring-red-400/25 hover:border-red-400 hover:bg-red-950/30'
+                          : difficulty === 'ALTA'
+                          ? 'bg-amber-950/20 border-amber-500/50 ring-1 ring-amber-400/25 hover:border-amber-400 hover:bg-amber-950/30'
+                          : 'bg-[#0d1a2e] border-[#1a3050] hover:border-blue-700 hover:bg-[#0f1e35]'
+                      }`}
                     >
                       <div className="flex items-start justify-between gap-3 pr-9">
                         <div className="flex-1 min-w-0">
@@ -287,6 +348,20 @@ export default function DashboardPage({ onSelectSubject, onAdmin, onLogout, isGu
                             <p className="text-white text-sm font-semibold truncate">{subject.name}</p>
                           </div>
                           <p className="text-slate-500 text-xs pl-5">{subject.teacher_name}</p>
+                          {difficultyLabel && (
+                            <div className="pl-5 mt-2">
+                              <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+                                isMarcioSubject
+                                  ? 'border-red-400/40 bg-red-500/10 text-red-200'
+                                  : difficulty === 'ALTA'
+                                  ? 'border-amber-400/40 bg-amber-400/10 text-amber-200'
+                                  : 'border-emerald-400/30 bg-emerald-500/10 text-emerald-200'
+                              }`}>
+                                {difficulty === 'FÁCIL' ? <CheckCircle className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />}
+                                {difficultyLabel}
+                              </span>
+                            </div>
+                          )}
                         </div>
                         <div className="flex items-center gap-3 shrink-0">
                           <div className="text-right">
@@ -347,6 +422,15 @@ export default function DashboardPage({ onSelectSubject, onAdmin, onLogout, isGu
             </p>
           </div>
         )}
+
+        <footer className="border-t border-[#1a3050]/60 pt-5 pb-2 text-center">
+          <p className="text-slate-500 text-xs">
+            Revisador de Questões. Todos os direitos reservados.
+          </p>
+          <p className="text-slate-600 text-[10px] mt-1">
+            Créditos: 6 Pelotão
+          </p>
+        </footer>
       </div>
     </div>
   );
