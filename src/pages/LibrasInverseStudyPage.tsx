@@ -264,7 +264,7 @@ export default function LibrasInverseStudyPage({ subject, onBack, isGuest }: Lib
                   playsInline
                   preload="metadata"
                   className="max-h-[52vh] max-w-full w-auto object-contain bg-black"
-                  src={encodeURI(currentCard.videoSrc)}
+                  src={currentCard.videoSrc}
                 >
                   Seu navegador não suporta vídeos.
                 </video>

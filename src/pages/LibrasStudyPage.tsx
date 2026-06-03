@@ -267,7 +267,7 @@ export default function LibrasStudyPage({ subject, onBack, isGuest }: LibrasStud
                     playsInline
                     preload="none"
                     className="max-h-[52vh] max-w-full w-auto object-contain bg-black"
-                    src={encodeURI(currentCard.videoSrc)}
+                    src={currentCard.videoSrc}
                   >
                     Seu navegador não suporta vídeos.
                   </video>
