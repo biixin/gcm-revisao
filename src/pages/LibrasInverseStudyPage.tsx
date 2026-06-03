@@ -10,6 +10,7 @@ import {
   PlaySquare,
   XCircle,
 } from 'lucide-react';
+import LibrasVideoPlayer from '../components/LibrasVideoPlayer';
 import { useAuth } from '../contexts/useAuth';
 import { librasInverseCards } from '../data/librasCards';
 import { loadProgressAnswers, saveProgressAnswer } from '../lib/localProgress';
@@ -257,18 +258,11 @@ export default function LibrasInverseStudyPage({ subject, onBack, isGuest }: Lib
                 <PlaySquare className="w-4 h-4 text-blue-400" />
                 <span className="text-slate-300 text-sm font-medium">Qual é este sinal?</span>
               </div>
-              <div className="flex justify-center rounded-xl bg-black border border-[#1a3050] overflow-hidden">
-                <video
-                  key={currentCard.id}
-                  controls
-                  playsInline
-                  preload="metadata"
-                  className="max-h-[52vh] max-w-full w-auto object-contain bg-black"
-                  src={currentCard.videoSrc}
-                >
-                  Seu navegador não suporta vídeos.
-                </video>
-              </div>
+              <LibrasVideoPlayer
+                key={currentCard.id}
+                src={currentCard.videoSrc}
+                title={`Sinal em LIBRAS: ${currentCard.word}`}
+              />
             </div>
 
             <div className="space-y-2.5">

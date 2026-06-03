@@ -21,6 +21,36 @@ input, textarea, select {
   appearance: none;
 }
 
+.libras-video-frame {
+  aspect-ratio: 9 / 16;
+  width: min(100%, 22rem);
+  max-height: min(58svh, 34rem);
+}
+
+@supports not (height: 1svh) {
+  .libras-video-frame {
+    max-height: min(58vh, 34rem);
+  }
+}
+
+.libras-video {
+  transform: translateZ(0);
+}
+
+.libras-video:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+  background: #000;
+}
+
+.libras-video:-webkit-full-screen {
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+  background: #000;
+}
+
 ::-webkit-scrollbar {
   width: 4px;
   height: 4px;

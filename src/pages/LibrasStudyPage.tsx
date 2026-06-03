@@ -11,6 +11,7 @@ import {
   Video,
   XCircle,
 } from 'lucide-react';
+import LibrasVideoPlayer from '../components/LibrasVideoPlayer';
 import { useAuth } from '../contexts/useAuth';
 import { librasCards } from '../data/librasCards';
 import { loadProgressAnswers, saveProgressAnswer } from '../lib/localProgress';
@@ -260,18 +261,11 @@ export default function LibrasStudyPage({ subject, onBack, isGuest }: LibrasStud
                   <Video className="w-4 h-4 text-blue-400" />
                   <span className="text-slate-300 text-sm font-medium">Resposta em vídeo</span>
                 </div>
-                <div className="flex justify-center rounded-xl bg-black border border-[#1a3050] overflow-hidden">
-                  <video
-                    key={currentCard.id}
-                    controls
-                    playsInline
-                    preload="none"
-                    className="max-h-[52vh] max-w-full w-auto object-contain bg-black"
-                    src={currentCard.videoSrc}
-                  >
-                    Seu navegador não suporta vídeos.
-                  </video>
-                </div>
+                <LibrasVideoPlayer
+                  key={currentCard.id}
+                  src={currentCard.videoSrc}
+                  title={`Resposta em vídeo: ${currentCard.word}`}
+                />
               </div>
             ) : (
               <button
