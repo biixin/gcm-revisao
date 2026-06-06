@@ -11,6 +11,7 @@ import { loadProgressAnswers, resetProgressAnswers } from '../lib/localProgress'
 import { librasInverseSubjectId, librasSubjectId } from '../data/librasCards';
 
 const logoUrl = 'https://firebasestorage.googleapis.com/v0/b/gcm-caxias-17535.firebasestorage.app/o/logo-gcm-sem%20fundo.png?alt=media&token=abcb7bfd-cecf-4101-87b9-83f942235ebd';
+const provaoSubjectId = 'local-provao-08-06';
 
 type SortMode = 'default' | 'difficulty';
 type SubjectDifficulty = 'URUBU' | 'ALTA' | 'FÁCIL';
@@ -24,6 +25,7 @@ const difficultyOrder: Record<SubjectDifficulty, number> = {
 function getSubjectDifficulty(subjectId: string): SubjectDifficulty {
   if (subjectId === 'local-marcio-legislacao-penal-eca') return 'URUBU';
   if (
+    subjectId === provaoSubjectId ||
     subjectId === librasSubjectId ||
     subjectId === librasInverseSubjectId ||
     subjectId === 'local-marcelo-porte-arma-fogo'
@@ -165,11 +167,16 @@ export default function DashboardPage({ onSelectSubject, onAdmin, onLogout, isGu
   const totalCorrect = stats.reduce((a, s) => a + s.correct, 0);
   const overallPct = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
   const displayedStats = useMemo(() => {
-    if (sortMode !== 'difficulty') return stats;
-
     return stats
       .map((item, index) => ({ item, index }))
       .sort((a, b) => {
+        const featuredDelta =
+          (a.item.subject.id === provaoSubjectId ? 0 : 1) -
+          (b.item.subject.id === provaoSubjectId ? 0 : 1);
+        if (featuredDelta !== 0) return featuredDelta;
+
+        if (sortMode !== 'difficulty') return a.index - b.index;
+
         const difficultyDelta = difficultyOrder[getSubjectDifficulty(a.item.subject.id)] - difficultyOrder[getSubjectDifficulty(b.item.subject.id)];
         if (difficultyDelta !== 0) return difficultyDelta;
         return a.index - b.index;
@@ -316,6 +323,7 @@ export default function DashboardPage({ onSelectSubject, onAdmin, onLogout, isGu
                 const isComplete = answered === total && total > 0;
                 const isStarted = answered > 0;
                 const accuracy = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+                const isProvaoSubject = subject.id === provaoSubjectId;
                 const isLibrasSubject = subject.id === librasSubjectId || subject.id === librasInverseSubjectId;
                 const isMarcioSubject = subject.id === 'local-marcio-legislacao-penal-eca';
                 const difficulty = getSubjectDifficulty(subject.id);
@@ -326,7 +334,9 @@ export default function DashboardPage({ onSelectSubject, onAdmin, onLogout, isGu
                     <button
                       onClick={() => onSelectSubject(subject)}
                       className={`w-full border rounded-2xl p-4 text-left transition-all duration-200 ${
-                        isLibrasSubject
+                        isProvaoSubject
+                          ? 'bg-gradient-to-br from-sky-950/60 via-[#0d1a2e] to-amber-950/35 border-sky-400/60 ring-2 ring-sky-300/30 hover:border-sky-300 hover:from-sky-950/75'
+                          : isLibrasSubject
                           ? 'bg-amber-950/20 border-amber-500/50 ring-1 ring-amber-400/25 hover:border-amber-400 hover:bg-amber-950/30'
                           : isMarcioSubject
                           ? 'bg-red-950/20 border-red-500/50 ring-1 ring-red-400/25 hover:border-red-400 hover:bg-red-950/30'
@@ -348,10 +358,12 @@ export default function DashboardPage({ onSelectSubject, onAdmin, onLogout, isGu
                             <p className="text-white text-sm font-semibold truncate">{subject.name}</p>
                           </div>
                           <p className="text-slate-500 text-xs pl-5">{subject.teacher_name}</p>
-                          {difficultyLabel && (
+                          {!isProvaoSubject && difficultyLabel && (
                             <div className="pl-5 mt-2">
                               <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
-                                isMarcioSubject
+                                isProvaoSubject
+                                  ? 'border-sky-300/50 bg-sky-400/10 text-sky-100'
+                                  : isMarcioSubject
                                   ? 'border-red-400/40 bg-red-500/10 text-red-200'
                                   : difficulty === 'ALTA'
                                   ? 'border-amber-400/40 bg-amber-400/10 text-amber-200'

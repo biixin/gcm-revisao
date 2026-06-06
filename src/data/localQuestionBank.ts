@@ -619,6 +619,57 @@ const rawSubjects: RawSubject[] = [
   },
 ];
 
+const provao0806SourceQuestions: RawQuestion[] = [
+  [1, "O que é segurança pública em um Estado democrático?", "b", ["Um sistema voltado apenas para punição", "Um conjunto de ações para garantir ordem, direitos e proteção da sociedade", "Uma atividade exclusiva do Exército", "Um modelo sem participação da população"]],
+  [2, "Qual é a principal função democrática da segurança pública?", "a", ["Garantir os direitos e a proteção da sociedade", "Aplicar punições sem investigação", "Limitar a liberdade da população", "Substituir o Poder Judiciário"]],
+  [3, "O que significa policiamento ostensivo?", "c", ["Atuação policial secreta", "Trabalho apenas administrativo", "Presença visível das forças de segurança para prevenção de crimes", "Investigação realizada apenas pela perícia"]],
+  [4, "Qual a função da prevenção criminal?", "b", ["Aumentar a repressão policial", "Evitar a ocorrência de crimes por meio de ações preventivas", "Punir suspeitos sem julgamento", "Substituir a investigação criminal"]],
+  [5, "O que é proteção dos direitos humanos na segurança pública?", "a", ["Garantir respeito à dignidade e aos direitos das pessoas", "Permitir abusos em situações de crise", "Aplicar punições sem limites legais", "Restringir direitos fundamentais"]],
+  [6, "Qual o objetivo final da segurança pública democrática?", "a", ["Garantir a paz social, os direitos e a segurança da população", "Aumentar o controle militar da sociedade", "Eliminar totalmente os conflitos sociais", "Substituir os demais poderes do Estado"]],
+  [7, "O que é policiamento comunitário?", "a", ["Um modelo baseado na aproximação entre polícia e comunidade", "Uma operação exclusivamente militar", "Um policiamento sem participação popular", "Uma atividade apenas investigativa"]],
+  [8, "Qual a função da mediação de conflitos?", "b", ["Incentivar disputas entre grupos", "Resolver conflitos de forma pacífica e dialogada", "Aplicar punições imediatas", "Substituir o sistema judiciário"]],
+  [9, "O que significa uso progressivo da força?", "b", ["Uso ilimitado da força policial", "Aplicação gradual da força conforme a necessidade da situação", "Uso da força apenas em operações militares", "Utilização de violência sem controle legal"]],
+  [10, "Qual o papel da segurança pública na garantia da cidadania?", "a", ["Assegurar direitos, proteção e convivência social", "Restringir a participação popular", "Controlar apenas manifestações públicas", "Atuar somente em situações de guerra"]],
+  [11, "Qual é o principal objetivo da atuação sociopedagógica da Guarda Municipal na escola?", "b", ["Substituir professores nas aulas", "Prevenir infrações por meio da informação acessível", "Reprimir crimes dentro da sala de aula", "Punir alunos indisciplinados"]],
+  [12, "Durante atividades com crianças pequenas, a postura ideal do agente é:", "d", ["Braços cruzados para impor respeito", "Mãos no cinto demonstrando autoridade", "Falar alto e com rigidez", "Abaixar-se para ficar na altura da criança"]],
+  [13, "Qual é a melhor abordagem com adolescentes em palestras?", "c", ["Usar apenas linguagem infantil", "Criar medo para impor respeito", "Estimular reflexão com perguntas (maiêutica)", "Ler leis sem interação"]],
+  [14, "Sobre a Teoria das Janelas Quebradas, o agente deve ensinar que:", "b", ["O vandalismo é normal na adolescência", "É crime e prejudica o ambiente, gerando mais violência", "Será cobrado financeiramente da família", "Deve ser aceito como expressão"]],
+  [15, "Qual é o primeiro passo antes de realizar uma atividade sociopedagógica?", "c", ["Chegar de surpresa", "Montar equipamentos direto", "Conversar com a direção para identificar problemas", "Preencher documentos antes de tudo"]],
+  [16, "Em caso de aluno furtando comida por necessidade, qual órgão deve ser acionado?", "d", ["CREAS", "DPCA", "CAPS", "CRAS"]],
+  [17, "Se o agente ignora um caso de violência doméstica, ele pode:", "b", ["Não sofrer nenhuma consequência", "Responder por omissão (administrativa e criminal)", "Apenas receber advertência leve", "Ser recompensado por evitar burocracia"]],
+  [18, "Ao ouvir uma criança relatar violência doméstica, o correto é:", "a", ["Garantir segurança e acionar a rede de proteção", "Interrogar a criança publicamente", "Confrontar o agressor sozinho", "Ignorar até ter provas"]],
+  [19, "Na técnica de “Reversão” (Judô Verbal), o agente deve:", "d", ["Enfrentar o aluno diretamente", "Gritar mais alto", "Ignorar e encerrar", "Redirecionar a situação com inteligência emocional"]],
+  [20, "Se o aluno continua indisciplinado, a regra de ouro é:", "a", ["Corrigir no privado e evitar exposição", "Humilhar publicamente", "Usar força", "Ridicularizar o aluno"]],
+  [21, "Qual é a principal função da Guarda Municipal na Ronda Escolar?", "c", ["Aplicar punições disciplinares aos alunos", "Substituir a direção escolar", "Atuar de forma preventiva, garantindo proteção e segurança", "Realizar interrogatórios com alunos"]],
+  [22, "A chamada “violência da escola” ocorre quando:", "c", ["Alunos brigam dentro da escola", "Há vandalismo contra o patrimônio", "A própria instituição promove práticas opressivas ou abusivas", "Há conflitos no portão da escola"]],
+  [23, "Um aluno joga lixo no chão e xinga um professor. O que a Guarda deve fazer?", "c", ["Prender o aluno", "Encaminhar para delegacia", "Deixar a situação sob responsabilidade da escola", "Usar força para conter o aluno"]],
+  [24, "Segundo o ECA, uma criança menor de 12 anos:", "c", ["Pode ser presa em flagrante", "Responde criminalmente", "Está sujeita apenas a medidas de proteção", "Deve ser algemada em casos graves"]],
+  [25, "A tríade da prevenção é composta por:", "b", ["Polícia, escola e hospital", "Guarda, escola e família", "Diretor, juiz e conselho tutelar", "Professores, alunos e polícia"]],
+  [26, "Ao ouvir uma criança relatar abuso, o agente deve:", "c", ["Fazer várias perguntas para confirmar", "Ignorar para evitar problemas", "Acolher e comunicar à direção para acionar os órgãos competentes", "Levar a criança até o agressor"]],
+  [27, "Para ser considerado bullying, é necessário:", "c", ["Acontecer apenas uma vez", "Ser apenas físico", "Ter repetição, intenção e desequilíbrio de poder", "Envolver adultos"]],
+  [28, "Alunos que filmam e compartilham brigas:", "c", ["São apenas espectadores", "Não têm responsabilidade", "São considerados coautores", "Estão ajudando a escola"]],
+  [29, "Em uma briga, a primeira atitude correta é:", "c", ["Gritar com os alunos", "Correr para o meio da confusão", "Separar os envolvidos e evitar contato visual", "Usar força imediatamente"]],
+  [30, "Um adulto chega à escola querendo agredir alunos. O correto é:", "c", ["Permitir a entrada", "Ignorar a situação", "Impedir, orientar e alertar sobre as consequências legais", "Deixar que resolva sozinho"]],
+];
+
+const neuseliProvaoQuestions = rawSubjects.find(subject => subject.id === "local-neuseli-gabarito-nao-oficial")?.questions ?? [];
+
+rawSubjects.unshift({
+  id: "local-provao-08-06",
+  name: "Provão 08/06",
+  teacher_name: "Baptista + L. Silva + Silva + Neuseli",
+  description: "Provão com questões dos PDFs de Baptista, Ronda Escolar, Sociopedagógica e da matéria da Neuseli já cadastrada.",
+  questions: [
+    ...provao0806SourceQuestions,
+    ...neuseliProvaoQuestions.map<RawQuestion>(([, text, correct, options], index) => [
+      provao0806SourceQuestions.length + index + 1,
+      text,
+      correct,
+      options,
+    ]),
+  ],
+});
+
 export const localSubjects: Subject[] = rawSubjects.map(({ id, name, teacher_name, description }) => ({
   id,
   name,
