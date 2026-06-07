@@ -653,16 +653,23 @@ const provao0806SourceQuestions: RawQuestion[] = [
 ];
 
 const neuseliProvaoQuestions = rawSubjects.find(subject => subject.id === "local-neuseli-gabarito-nao-oficial")?.questions ?? [];
+const paulaProvaoQuestions = rawSubjects.find(subject => subject.id === "local-paula-drogas-ilicitas")?.questions ?? [];
 
 rawSubjects.unshift({
   id: "local-provao-08-06",
   name: "Provão 08/06",
-  teacher_name: "Baptista + L. Silva + Silva + Neuseli",
-  description: "Provão com questões dos PDFs de Baptista, Ronda Escolar, Sociopedagógica e da matéria da Neuseli já cadastrada.",
+  teacher_name: "Baptista + L. Silva + Silva + Neuseli + Paula",
+  description: "Provão com questões dos PDFs de Baptista, Ronda Escolar, Sociopedagógica e das matérias da Neuseli e Paula já cadastradas.",
   questions: [
     ...provao0806SourceQuestions,
     ...neuseliProvaoQuestions.map<RawQuestion>(([, text, correct, options], index) => [
       provao0806SourceQuestions.length + index + 1,
+      text,
+      correct,
+      options,
+    ]),
+    ...paulaProvaoQuestions.map<RawQuestion>(([, text, correct, options], index) => [
+      provao0806SourceQuestions.length + neuseliProvaoQuestions.length + index + 1,
       text,
       correct,
       options,
