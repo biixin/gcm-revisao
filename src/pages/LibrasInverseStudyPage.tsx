@@ -8,15 +8,16 @@ import {
   Circle,
   Filter,
   PlaySquare,
+  RotateCcw,
   XCircle,
 } from 'lucide-react';
 import LibrasVideoPlayer from '../components/LibrasVideoPlayer';
 import { useAuth } from '../contexts/useAuth';
 import { librasInverseCards } from '../data/librasCards';
-import { loadProgressAnswers, saveProgressAnswer } from '../lib/localProgress';
+import { loadProgressAnswers, resetProgressAnswers, saveProgressAnswer } from '../lib/localProgress';
 import { Subject, UserAnswer } from '../lib/supabase';
 
-type FilterType = 'all' | 'unanswered' | 'wrong';
+type FilterType = 'all' | 'unanswered' | 'wrong' | 'retryWrong';
 
 type LibrasInverseStudyPageProps = {
   subject: Subject;
@@ -34,6 +35,9 @@ export default function LibrasInverseStudyPage({ subject, onBack, isGuest }: Lib
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [resettingWrong, setResettingWrong] = useState(false);
+  const [resettingSubject, setResettingSubject] = useState(false);
+  const [retryWrongIds, setRetryWrongIds] = useState<string[]>([]);
   const currentCardIdRef = useRef<string | null>(null);
   const previousFilterRef = useRef<FilterType>(filter);
 
@@ -68,6 +72,8 @@ export default function LibrasInverseStudyPage({ subject, onBack, isGuest }: Lib
     return scopedAnswers;
   }, [answers, cardIds]);
 
+  const retryWrongIdSet = useMemo(() => new Set(retryWrongIds), [retryWrongIds]);
+
   useEffect(() => {
     const filterChanged = previousFilterRef.current !== filter;
     previousFilterRef.current = filter;
@@ -75,6 +81,7 @@ export default function LibrasInverseStudyPage({ subject, onBack, isGuest }: Lib
     let nextCards = [...librasInverseCards];
     if (filter === 'unanswered') nextCards = nextCards.filter(card => !subjectAnswers.has(card.id));
     if (filter === 'wrong') nextCards = nextCards.filter(card => subjectAnswers.get(card.id)?.is_correct === false);
+    if (filter === 'retryWrong') nextCards = nextCards.filter(card => retryWrongIdSet.has(card.id));
 
     const currentCardId = currentCardIdRef.current;
     setFilteredCards(nextCards);
@@ -88,7 +95,7 @@ export default function LibrasInverseStudyPage({ subject, onBack, isGuest }: Lib
       if (sameCardIndex >= 0) return sameCardIndex;
       return Math.max(0, Math.min(previousIndex, nextCards.length - 1));
     });
-  }, [filter, subjectAnswers]);
+  }, [filter, retryWrongIdSet, subjectAnswers]);
 
   const currentCard = filteredCards[currentIndex] ?? null;
   const currentAnswer = currentCard ? subjectAnswers.get(currentCard.id) : null;
@@ -122,9 +129,78 @@ export default function LibrasInverseStudyPage({ subject, onBack, isGuest }: Lib
     await saveProgressAnswer(user?.id, isGuest, newAnswer);
   }, [answers, currentCard, isGuest, revealed, user?.id]);
 
+  const resetWrongAnswers = useCallback(async () => {
+    if (resettingWrong) return;
+
+    const wrongCardIds = Array.from(subjectAnswers.values())
+      .filter(answer => !answer.is_correct)
+      .map(answer => answer.question_id);
+
+    if (wrongCardIds.length === 0) return;
+
+    setResettingWrong(true);
+
+    try {
+      await resetProgressAnswers(user?.id, isGuest, wrongCardIds);
+
+      setAnswers(prev => {
+        const next = new Map(prev);
+        wrongCardIds.forEach(cardId => next.delete(cardId));
+        return next;
+      });
+      setRetryWrongIds(wrongCardIds);
+      setSelectedAnswer(null);
+      setRevealed(false);
+      setFilter('retryWrong');
+      setCurrentIndex(0);
+    } finally {
+      setResettingWrong(false);
+    }
+  }, [isGuest, resettingWrong, subjectAnswers, user?.id]);
+
+  const showAllQuestions = useCallback(() => {
+    setRetryWrongIds([]);
+    setSelectedAnswer(null);
+    setRevealed(false);
+    setFilter('all');
+    setCurrentIndex(0);
+  }, []);
+
+  const resetSubjectAnswers = useCallback(async () => {
+    if (resettingSubject || subjectAnswers.size === 0) return;
+
+    const confirmed = window.confirm(`Resetar todo o progresso de "${subject.name}"?`);
+    if (!confirmed) return;
+
+    const cardIdsToReset = librasInverseCards.map(card => card.id);
+    setResettingSubject(true);
+
+    try {
+      await resetProgressAnswers(user?.id, isGuest, cardIdsToReset);
+
+      setAnswers(prev => {
+        const next = new Map(prev);
+        cardIdsToReset.forEach(cardId => next.delete(cardId));
+        return next;
+      });
+      setRetryWrongIds([]);
+      setSelectedAnswer(null);
+      setRevealed(false);
+      setFilter('all');
+      setCurrentIndex(0);
+    } finally {
+      setResettingSubject(false);
+    }
+  }, [isGuest, resettingSubject, subject.name, subjectAnswers.size, user?.id]);
+
   const answered = subjectAnswers.size;
   const correct = Array.from(subjectAnswers.values()).filter(answer => answer.is_correct).length;
+  const wrong = answered - correct;
   const pct = librasInverseCards.length > 0 ? Math.round((answered / librasInverseCards.length) * 100) : 0;
+  const filterOptions = useMemo<FilterType[]>(
+    () => retryWrongIds.length > 0 ? ['all', 'unanswered', 'wrong', 'retryWrong'] : ['all', 'unanswered', 'wrong'],
+    [retryWrongIds.length]
+  );
 
   if (loading) {
     return (
@@ -146,7 +222,18 @@ export default function LibrasInverseStudyPage({ subject, onBack, isGuest }: Lib
               <p className="text-white text-sm font-semibold truncate">{subject.name}</p>
               <p className="text-slate-500 text-xs">{subject.teacher_name}</p>
             </div>
-            <div className="relative">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={resetSubjectAnswers}
+                disabled={subjectAnswers.size === 0 || resettingSubject}
+                title={subjectAnswers.size > 0 ? 'Resetar matéria' : 'Sem progresso para resetar'}
+                aria-label={`Resetar matéria ${subject.name}`}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border bg-[#0a1525] border-[#1a3050] text-slate-400 transition-colors hover:text-red-300 hover:border-red-700/60 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-slate-400 disabled:hover:border-[#1a3050]"
+              >
+                <RotateCcw className={`w-3.5 h-3.5 ${resettingSubject ? 'animate-spin' : ''}`} />
+              </button>
+              <div className="relative">
               <button
                 onClick={() => setShowFilterMenu(!showFilterMenu)}
                 className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
@@ -159,7 +246,7 @@ export default function LibrasInverseStudyPage({ subject, onBack, isGuest }: Lib
               </button>
               {showFilterMenu && (
                 <div className="absolute right-0 top-full mt-1 bg-[#0d1a2e] border border-[#1a3050] rounded-xl shadow-2xl overflow-hidden z-20 w-44">
-                  {(['all', 'unanswered', 'wrong'] as FilterType[]).map(item => (
+                  {filterOptions.map(item => (
                     <button
                       key={item}
                       onClick={() => { setFilter(item); setShowFilterMenu(false); }}
@@ -167,11 +254,12 @@ export default function LibrasInverseStudyPage({ subject, onBack, isGuest }: Lib
                         filter === item ? 'bg-blue-900/30 text-blue-400' : 'text-slate-300 hover:bg-[#1a2a4a]'
                       }`}
                     >
-                      {item === 'all' ? 'Todas as questões' : item === 'unanswered' ? 'Não respondidas' : 'Questões erradas'}
+                      {item === 'all' ? 'Todas as questões' : item === 'unanswered' ? 'Não respondidas' : item === 'wrong' ? 'Questões erradas' : 'Refazendo erradas'}
                     </button>
                   ))}
                 </div>
               )}
+              </div>
             </div>
           </div>
 
@@ -188,6 +276,15 @@ export default function LibrasInverseStudyPage({ subject, onBack, isGuest }: Lib
             <span className="text-slate-600 text-[10px]">{answered}/{librasInverseCards.length} respondidas</span>
             {answered > 0 && <span className="text-slate-600 text-[10px]">{Math.round((correct / answered) * 100)}% acertos</span>}
           </div>
+          <button
+            type="button"
+            onClick={retryWrongIds.length > 0 ? showAllQuestions : resetWrongAnswers}
+            disabled={retryWrongIds.length === 0 && (wrong === 0 || resettingWrong)}
+            className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl border border-red-700/40 bg-red-950/20 px-3 py-2 text-xs font-semibold text-red-200 transition-all hover:border-red-500/70 hover:bg-red-950/35 disabled:cursor-not-allowed disabled:border-[#1a3050] disabled:bg-[#0a1525] disabled:text-slate-600"
+          >
+            <RotateCcw className={`w-3.5 h-3.5 ${resettingWrong ? 'animate-spin' : ''}`} />
+            {retryWrongIds.length > 0 ? 'Mostrar todas as questões' : wrong > 0 ? `Refazer erradas (${wrong})` : 'Nenhuma errada para refazer'}
+          </button>
         </div>
       </header>
 
@@ -223,7 +320,7 @@ export default function LibrasInverseStudyPage({ subject, onBack, isGuest }: Lib
           <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center">
             <BookOpen className="w-10 h-10 text-slate-700" />
             <p className="text-slate-400 text-sm">
-              {filter === 'unanswered' ? 'Todas as questões foram respondidas!' : filter === 'wrong' ? 'Nenhuma questão errada. Parabéns!' : 'Nenhuma questão encontrada.'}
+              {filter === 'unanswered' ? 'Todas as questões foram respondidas!' : filter === 'wrong' ? 'Nenhuma questão errada. Parabéns!' : filter === 'retryWrong' ? 'Nenhuma questão para refazer.' : 'Nenhuma questão encontrada.'}
             </p>
             <button onClick={() => setFilter('all')} className="text-blue-400 text-sm hover:text-blue-300 transition-colors">
               Ver todas as questões

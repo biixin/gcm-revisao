@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import {
   ArrowLeft, ArrowRight, ChevronLeft, Filter, Lock, Unlock,
-  CheckCircle, XCircle, Circle, AlertTriangle, BookOpen
+  CheckCircle, XCircle, Circle, AlertTriangle, BookOpen, RotateCcw
 } from 'lucide-react';
 import { useAuth } from '../contexts/useAuth';
 import { supabase, Subject, Question, UserAnswer } from '../lib/supabase';
 import { getLocalQuestions, isLocalSubject } from '../data/localQuestionBank';
-import { loadProgressAnswers, saveProgressAnswer } from '../lib/localProgress';
+import { loadProgressAnswers, resetProgressAnswers, saveProgressAnswer } from '../lib/localProgress';
 
-type FilterType = 'all' | 'unanswered' | 'wrong';
+type FilterType = 'all' | 'unanswered' | 'wrong' | 'retryWrong';
 
 type StudyPageProps = {
   subject: Subject;
@@ -33,6 +33,9 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [resettingWrong, setResettingWrong] = useState(false);
+  const [resettingSubject, setResettingSubject] = useState(false);
+  const [retryWrongIds, setRetryWrongIds] = useState<string[]>([]);
   const currentQuestionIdRef = useRef<string | null>(null);
   const previousFilterRef = useRef<FilterType>(filter);
 
@@ -90,6 +93,8 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
     return scopedAnswers;
   }, [answers, questionIds]);
 
+  const retryWrongIdSet = useMemo(() => new Set(retryWrongIds), [retryWrongIds]);
+
   useEffect(() => {
     const filterChanged = previousFilterRef.current !== filter;
     previousFilterRef.current = filter;
@@ -97,6 +102,7 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
     let filtered = [...questions];
     if (filter === 'unanswered') filtered = filtered.filter(q => !subjectAnswers.has(q.id));
     if (filter === 'wrong') filtered = filtered.filter(q => subjectAnswers.get(q.id)?.is_correct === false);
+    if (filter === 'retryWrong') filtered = filtered.filter(q => retryWrongIdSet.has(q.id));
 
     const currentQuestionId = currentQuestionIdRef.current;
     setFilteredQuestions(filtered);
@@ -110,7 +116,7 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
       if (sameQuestionIndex >= 0) return sameQuestionIndex;
       return Math.max(0, Math.min(previousIndex, filtered.length - 1));
     });
-  }, [filter, questions, subjectAnswers]);
+  }, [filter, questions, retryWrongIdSet, subjectAnswers]);
 
   const currentQuestion = filteredQuestions[currentIndex] ?? null;
   const currentAnswer = currentQuestion ? subjectAnswers.get(currentQuestion.id) : null;
@@ -152,7 +158,7 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
     if (existing) {
       await supabase
         .from('user_answers')
-        .update({ selected_answer: letter, is_correct: isCorrect, answered_at: new Date().toISOString() })
+        .update({ selected_answer: letter, is_correct: isCorrect, answered_at: newAnswer.answered_at })
         .eq('id', existing.id);
     } else {
       await supabase
@@ -160,6 +166,100 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
         .insert({ user_id: userId, question_id: currentQuestion.id, selected_answer: letter, is_correct: isCorrect });
     }
   }, [answers, currentQuestion, isGuest, localSubject, revealed, userId]);
+
+  const resetWrongAnswers = useCallback(async () => {
+    if (resettingWrong) return;
+
+    const wrongQuestionIds = Array.from(subjectAnswers.values())
+      .filter(answer => !answer.is_correct)
+      .map(answer => answer.question_id);
+
+    if (wrongQuestionIds.length === 0) return;
+
+    setResettingWrong(true);
+
+    try {
+      if (localSubject) {
+        await resetProgressAnswers(userId, isGuest, wrongQuestionIds);
+      } else if (userId && !isGuest) {
+        const { error } = await supabase
+          .from('user_answers')
+          .delete()
+          .eq('user_id', userId)
+          .in('question_id', wrongQuestionIds);
+
+        if (error) {
+          console.warn('Nao foi possivel resetar as respostas erradas.', error.message);
+          return;
+        }
+      } else {
+        return;
+      }
+
+      setAnswers(prev => {
+        const next = new Map(prev);
+        wrongQuestionIds.forEach(questionId => next.delete(questionId));
+        return next;
+      });
+      setRetryWrongIds(wrongQuestionIds);
+      setSelectedAnswer(null);
+      setRevealed(false);
+      setFilter('retryWrong');
+      setCurrentIndex(0);
+    } finally {
+      setResettingWrong(false);
+    }
+  }, [isGuest, localSubject, resettingWrong, subjectAnswers, userId]);
+
+  const showAllQuestions = useCallback(() => {
+    setRetryWrongIds([]);
+    setSelectedAnswer(null);
+    setRevealed(false);
+    setFilter('all');
+    setCurrentIndex(0);
+  }, []);
+
+  const resetSubjectAnswers = useCallback(async () => {
+    if (resettingSubject || subjectAnswers.size === 0) return;
+
+    const confirmed = window.confirm(`Resetar todo o progresso de "${subject.name}"?`);
+    if (!confirmed) return;
+
+    const currentQuestionIds = questions.map(question => question.id);
+    setResettingSubject(true);
+
+    try {
+      if (localSubject) {
+        await resetProgressAnswers(userId, isGuest, currentQuestionIds);
+      } else if (userId && !isGuest) {
+        const { error } = await supabase
+          .from('user_answers')
+          .delete()
+          .eq('user_id', userId)
+          .in('question_id', currentQuestionIds);
+
+        if (error) {
+          console.warn('Nao foi possivel resetar a materia.', error.message);
+          return;
+        }
+      } else {
+        return;
+      }
+
+      setAnswers(prev => {
+        const next = new Map(prev);
+        currentQuestionIds.forEach(questionId => next.delete(questionId));
+        return next;
+      });
+      setRetryWrongIds([]);
+      setSelectedAnswer(null);
+      setRevealed(false);
+      setFilter('all');
+      setCurrentIndex(0);
+    } finally {
+      setResettingSubject(false);
+    }
+  }, [isGuest, localSubject, questions, resettingSubject, subject.name, subjectAnswers.size, userId]);
 
   function activateGuidedMode() {
     if (guidedPassword === subject.guided_mode_password && subject.guided_mode_password !== '') {
@@ -174,7 +274,12 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
 
   const answered = subjectAnswers.size;
   const correct = Array.from(subjectAnswers.values()).filter(a => a.is_correct).length;
+  const wrong = answered - correct;
   const pct = questions.length > 0 ? Math.round((answered / questions.length) * 100) : 0;
+  const filterOptions = useMemo<FilterType[]>(
+    () => retryWrongIds.length > 0 ? ['all', 'unanswered', 'wrong', 'retryWrong'] : ['all', 'unanswered', 'wrong'],
+    [retryWrongIds.length]
+  );
 
   const options = currentQuestion?.options ? [...currentQuestion.options].sort((a, b) => a.letter.localeCompare(b.letter)) : [];
   const isExamQ = currentQuestion?.is_exam_question && guidedMode;
@@ -215,6 +320,16 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
                   {guidedMode ? 'Guiado' : 'Guiado'}
                 </button>
               )}
+              <button
+                type="button"
+                onClick={resetSubjectAnswers}
+                disabled={subjectAnswers.size === 0 || resettingSubject}
+                title={subjectAnswers.size > 0 ? 'Resetar matéria' : 'Sem progresso para resetar'}
+                aria-label={`Resetar matéria ${subject.name}`}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border bg-[#0a1525] border-[#1a3050] text-slate-400 transition-colors hover:text-red-300 hover:border-red-700/60 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-slate-400 disabled:hover:border-[#1a3050]"
+              >
+                <RotateCcw className={`w-3.5 h-3.5 ${resettingSubject ? 'animate-spin' : ''}`} />
+              </button>
               {/* Filter */}
               <div className="relative">
                 <button
@@ -229,7 +344,7 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
                 </button>
                 {showFilterMenu && (
                   <div className="absolute right-0 top-full mt-1 bg-[#0d1a2e] border border-[#1a3050] rounded-xl shadow-2xl overflow-hidden z-20 w-44">
-                    {(['all', 'unanswered', 'wrong'] as FilterType[]).map(f => (
+                    {filterOptions.map(f => (
                       <button
                         key={f}
                         onClick={() => { setFilter(f); setShowFilterMenu(false); }}
@@ -237,7 +352,7 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
                           filter === f ? 'bg-blue-900/30 text-blue-400' : 'text-slate-300 hover:bg-[#1a2a4a]'
                         }`}
                       >
-                        {f === 'all' ? 'Todas as questões' : f === 'unanswered' ? 'Não respondidas' : 'Questões erradas'}
+                        {f === 'all' ? 'Todas as questões' : f === 'unanswered' ? 'Não respondidas' : f === 'wrong' ? 'Questões erradas' : 'Refazendo erradas'}
                       </button>
                     ))}
                   </div>
@@ -258,6 +373,15 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
             <span className="text-slate-600 text-[10px]">{answered}/{questions.length} respondidas</span>
             {answered > 0 && <span className="text-slate-600 text-[10px]">{Math.round((correct / answered) * 100)}% acertos</span>}
           </div>
+          <button
+            type="button"
+            onClick={retryWrongIds.length > 0 ? showAllQuestions : resetWrongAnswers}
+            disabled={retryWrongIds.length === 0 && (wrong === 0 || resettingWrong)}
+            className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl border border-red-700/40 bg-red-950/20 px-3 py-2 text-xs font-semibold text-red-200 transition-all hover:border-red-500/70 hover:bg-red-950/35 disabled:cursor-not-allowed disabled:border-[#1a3050] disabled:bg-[#0a1525] disabled:text-slate-600"
+          >
+            <RotateCcw className={`w-3.5 h-3.5 ${resettingWrong ? 'animate-spin' : ''}`} />
+            {retryWrongIds.length > 0 ? 'Mostrar todas as questões' : wrong > 0 ? `Refazer erradas (${wrong})` : 'Nenhuma errada para refazer'}
+          </button>
         </div>
       </header>
 
@@ -295,7 +419,7 @@ export default function StudyPage({ subject, onBack, isGuest }: StudyPageProps) 
           <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center">
             <BookOpen className="w-10 h-10 text-slate-700" />
             <p className="text-slate-400 text-sm">
-              {filter === 'unanswered' ? 'Todas as questões foram respondidas!' : filter === 'wrong' ? 'Nenhuma questão errada. Parabéns!' : 'Nenhuma questão encontrada.'}
+              {filter === 'unanswered' ? 'Todas as questões foram respondidas!' : filter === 'wrong' ? 'Nenhuma questão errada. Parabéns!' : filter === 'retryWrong' ? 'Nenhuma questão para refazer.' : 'Nenhuma questão encontrada.'}
             </p>
             <button onClick={() => setFilter('all')} className="text-blue-400 text-sm hover:text-blue-300 transition-colors">
               Ver todas as questões
