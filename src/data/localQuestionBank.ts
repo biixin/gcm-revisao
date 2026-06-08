@@ -9,6 +9,118 @@ type RawQuestion = [number, string, string, string[]];
 
 type RawSubject = { id: string; name: string; teacher_name: string; description: string; questions: RawQuestion[] };
 
+const valerioQuestions: RawQuestion[] = [
+  [1, "Uma lei ordinária não pode:", "b", ["Regulamentar direitos.", "Contrariar a Constituição Federal.", "Criar deveres.", "Revogar decreto.", "Ser aplicada nacionalmente."]],
+  [2, "Crime culposo ocorre quando:", "a", ["O resultado decorre de imprudência, negligência ou imperícia.", "O agente deseja o resultado.", "O crime é premeditado.", "O agente assume conscientemente o risco.", "Há intenção indireta."]],
+  [3, "São excludentes de ilicitude previstas no Código Penal:", "d", ["Menoridade e embriaguez.", "Dolo e culpa.", "Emoção e paixão.", "Legítima defesa, estado de necessidade, estrito cumprimento do dever legal e exercício regular de direito.", "Contravenção e crime."]],
+  [4, "O princípio da ampla defesa garante:", "b", ["Condenação imediata.", "O uso de meios legais para defesa do acusado.", "Apenas direito ao silêncio.", "Julgamento sem advogado.", "Prisão automática."]],
+  [5, "A autoridade policial e seus agentes:", "c", ["Dependem de autorização judicial imediata.", "Não atuam em crimes hediondos.", "Têm obrigação legal de efetuar a prisão em flagrante.", "Apenas registram a ocorrência.", "Podem escolher prender ou não."]],
+  [6, "A Constituição Federal assegura:", "c", ["Prisão sem comunicação.", "Pena sem processo.", "Direitos e garantias fundamentais.", "Prisão perpétua.", "Tortura como meio investigativo."]],
+  [7, "A pena tem como finalidade:", "a", ["Promover prevenção e ressocialização.", "Apenas castigar.", "Produzir lucro ao poder público.", "Eliminar direitos fundamentais.", "Beneficiar o Estado."]],
+  [8, "O flagrante próprio acontece quando:", "a", ["O agente é preso durante a prática criminosa.", "O suspeito confessa dias depois.", "A vítima reconhece o autor.", "O autor foge do local.", "Existe mandado judicial."]],
+  [9, "A tipicidade consiste:", "b", ["Na aplicação da pena.", "Na adequação da conduta à descrição legal do crime.", "Na prisão do autor.", "Na análise moral do fato.", "No julgamento pelo juiz."]],
+  [10, "O flagrante presumido ocorre quando:", "b", ["O crime ocorre na presença do juiz.", "O agente é encontrado com objetos do crime.", "O suspeito foge sem perseguição.", "O autor se entrega.", "Existe mandado de prisão."]],
+  [11, "O Direito Privado trata principalmente:", "b", ["Das infrações penais.", "Das relações entre particulares.", "Das relações militares.", "Das atividades legislativas.", "Da administração pública."]],
+  [12, "A Guarda Municipal pode atuar:", "b", ["Apenas no controle do trânsito.", "Na proteção municipal preventiva, policiamento ostensivo e proximidade com a comunidade.", "Somente nas atividades administrativas.", "Apenas na proteção do patrimônio público.", "Somente mediante autorização judicial."]],
+  [13, "Qualquer pessoa poderá prender em flagrante, o termo infere o sentido de que?", "a", ["Qualquer do povo.", "Apenas guardas municipais.", "Apenas magistrados.", "Apenas policiais civis.", "Apenas policiais militares."]],
+  [14, "O Direito Público regula:", "d", ["Relações entre particulares apenas.", "Questões comerciais internacionais apenas.", "Relações familiares exclusivamente.", "Relações envolvendo o Estado e o interesse coletivo.", "Contratos empresariais privados."]],
+  [15, "A culpabilidade exige:", "b", ["Prisão preventiva.", "Capacidade de entendimento do agente.", "Existência de flagrante.", "Responsabilidade objetiva.", "Apenas resultado naturalístico."]],
+  [16, "A culpabilidade está relacionada:", "a", ["A capacidade de responsabilização do agente.", "Ao valor da fiança.", "A existência de testemunhas.", "Apenas ao dano causado.", "A prisão em flagrante."]],
+  [17, "Prisão em flagrante ocorre quando:", "a", ["O agente é surpreendido cometendo a infração.", "O suspeito possui antecedentes.", "Existe condenação definitiva.", "Existe denúncia anônima.", "O juiz expede mandado."]],
+  [18, "O homicídio qualificado é considerado:", "e", ["Contravenção penal.", "Infração administrativa.", "Crime culposo.", "Crime político.", "Crime hediondo."]],
+  [19, "A ilicitude significa:", "b", ["A existência de condenação.", "A prática de ato contrário ao ordenamento jurídico.", "O simples descumprimento moral.", "A inexistência de culpa.", "A ausência de dolo."]],
+  [20, "O estado de necessidade ocorre quando:", "c", ["O agente deseja vingança.", "Existe apenas medo subjetivo.", "O agente pratica fato para salvar direito próprio ou alheio diante de perigo atual.", "O agente atua por diversão.", "Há simples discussão verbal."]],
+  [21, "Crime doloso é aquele em que:", "e", ["O agente assume o risco ou não quer o resultado.", "Não existe intenção.", "O resultado ocorre por imprudência.", "O fato ocorre por acidente inevitável.", "O agente assume o risco ou quer o resultado."]],
+  [22, "A principal função social do Direito é:", "e", ["Limitar exclusivamente a liberdade da população.", "Garantir a Pacificação Social e a Insegurança jurídica.", "Substituir os costumes sociais.", "Beneficiar apenas o Estado.", "Garantir a Pacificação social e a segurança jurídica."]],
+  [23, "Crime é:", "e", ["Toda conduta imoral.", "Ação proibida por costume social.", "Toda infração administrativa.", "Apenas ato violento.", "Fato típico, ilícito e culpável."]],
+  [24, "São elementos do crime:", "b", ["Dolo, culpa e pena.", "Tipicidade, ilicitude e culpabilidade.", "Conduta, prisão e julgamento.", "Tipicidade, legalidade e moralidade.", "Processo, pena e sanção."]],
+  [25, "São considerados crimes hediondos:", "a", ["Crimes definidos em lei como de extrema gravidade.", "Contravenções penais.", "Infrações administrativas.", "Apenas crimes patrimoniais.", "Crimes de menor potencial ofensivo."]],
+  [26, "O que significa o Exercício Regular de Direito:", "d", ["Descumprir ordem judicial.", "Agir por vingança legítima.", "Agir sem intenção.", "Praticar ato autorizado pelo ordenamento jurídico.", "Praticar crime sem punição."]],
+  [27, "Na hierarquia das normas brasileiras, a norma suprema é:", "a", ["Constituição Federal.", "Código Penal.", "Lei Orgânica Municipal.", "Decreto presidencial.", "Portaria ministerial."]],
+  [28, "O princípio da legalidade determina que:", "e", ["O agente público pode agir sem previsão legal.", "O costume prevalece sobre a lei.", "Toda conduta imoral é crime.", "O juiz pode criar crimes.", "Ninguém será obrigado a fazer ou deixar de fazer algo senão em virtude de lei."]],
+  [29, "A finalidade principal da prisão em flagrante é:", "d", ["Antecipar definitivamente a pena.", "Punir sem julgamento.", "Impedir a defesa.", "Interromper o crime, impedir a fuga, proteger a sociedade.", "Substituir o processo judicial."]],
+  [30, "O flagrante preparado é:", "e", ["Sinônimo de flagrante próprio.", "Sempre legal.", "Modalidade de prisão preventiva.", "Obrigatório em crimes hediondos.", "Considerado ilegal quando impede a consumação do crime."]],
+  [31, "O estrito cumprimento do dever legal aplica-se:", "a", ["Aos agentes públicos que agem conforme determinação legal.", "Somente aos militares em guerra.", "Apenas aos juízes.", "A qualquer pessoa em situação de perigo.", "Apenas aos advogados."]],
+  [32, "A diferença principal entre crime e contravenção penal está:", "a", ["Na gravidade da infração.", "Na idade do autor.", "Na existência de vítima.", "No número de autores.", "No local do fato."]],
+  [33, "O Direito pode ser definido como:", "e", ["Um conjunto de opiniões morais sem força obrigatória.", "Apenas regras criadas pelo Poder Judiciário.", "Um conjunto de costumes sem sanções.", "Exclusivamente leis penais.", "Um sistema de normas destinado a regular a convivência social."]],
+  [34, "O devido processo legal significa:", "c", ["Ausência de defesa técnica.", "Punição imediata do suspeito.", "Respeito às regras legais durante o processo.", "Julgamento sem provas.", "Aplicação automática da pena."]],
+  [35, "No Direito Penal, o princípio da legalidade significa:", "a", ["Não há crime sem lei anterior que o defina.", "O delegado pode criar tipos penais.", "O costume pode criar crimes.", "A analogia cria crimes.", "A pena pode ser criada após o fato."]],
+  [36, "O flagrante impróprio ocorre quando:", "b", ["O autor comparece espontaneamente.", "O agente é perseguido logo após o crime.", "O flagrante foi preparado.", "Existe condenação definitiva.", "O crime ainda está acontecendo."]],
+  [37, "Contravenção penal é:", "b", ["Crime hediondo.", "Infração penal de menor potencial ofensivo.", "Crime político.", "Crime militar.", "Infração administrativa."]],
+  [38, "O agente que excede os limites da legítima defesa:", "d", ["Nunca responde criminalmente.", "Fica automaticamente absolvido.", "Responde apenas administrativamente.", "Responde pelo excesso praticado.", "Não responde pelo excesso praticado."]],
+  [39, "Age em legítima defesa quem:", "c", ["Comete crime por medo.", "Pratica vingança pessoal.", "Reage moderadamente a injusta agressão atual ou iminente.", "Ataca primeiro para evitar discussão.", "Age sem intenção de defesa."]],
+  [40, "O tráfico ilícito de entorpecentes é equiparado a:", "a", ["Crime hediondo.", "Infração administrativa.", "Crime culposo.", "Crime eleitoral.", "Contravenção penal."]],
+];
+
+const mAntonioQuestions: RawQuestion[] = [
+  [1, "Durante uma abordagem em via pública, qual deve ser a primeira atitude do guarda municipal?", "b", ["Realizar busca pessoal imediatamente", "Identificar-se e dar ordem clara ao abordado", "Algemar o suspeito preventivamente", "Recolher documentos sem explicação"]],
+  [2, "Em uma abordagem técnica, a chamada “posição de segurança” tem como objetivo:", "c", ["Facilitar a fuga do suspeito", "Evitar contato visual", "Reduzir riscos para o agente e terceiros", "Demonstrar autoridade excessiva"]],
+  [3, "O uso da força pelo guarda municipal deve ocorrer:", "b", ["Sempre que houver desobediência verbal", "Apenas em situações de necessidade, legalidade e proporcionalidade", "Em qualquer fiscalização rotineira", "Somente com autorização judicial"]],
+  [4, "Durante a busca pessoal, o guarda municipal deve:", "a", ["Agir com respeito aos direitos individuais", "Fazer exposição pública do abordado", "Utilizar força física obrigatoriamente", "Revistar apenas objetos de valor"]],
+  [5, "Qual é um dos principais objetivos da abordagem preventiva?", "c", ["Aplicar multas imediatamente", "Intimidar a população", "Prevenir delitos e aumentar a segurança pública", "Realizar detenções sem motivo"]],
+  [6, "Qual é o principal objetivo do patrulhamento urbano da GCM?", "b", ["Aplicar multas de trânsito exclusivamente", "Garantir a proteção preventiva da população e do patrimônio público", "Investigar crimes federais", "Fiscalizar impostos municipais"]],
+  [7, "Durante o patrulhamento preventivo, o agente da GCM deve:", "c", ["Permanecer sempre na viatura", "Agir apenas após ordem judicial", "Observar atitudes suspeitas e prevenir ocorrências", "Abordar todas as pessoas indiscriminadamente"]],
+  [8, "A abordagem de um suspeito deve ocorrer:", "c", ["Sem motivo algum", "Apenas em horário comercial", "Com fundada suspeita e respeito aos direitos individuais", "Somente com autorização do prefeito"]],
+  [9, "No patrulhamento em área escolar, a prioridade da GCM é:", "b", ["Fiscalizar comércio local", "Garantir segurança da comunidade escolar", "Realizar prisões em flagrante apenas", "Controlar trânsito estadual"]],
+  [10, "Qual equipamento é essencial para comunicação durante o patrulhamento?", "b", ["Calculadora", "Rádio comunicador", "Lanterna decorativa", "GPS pessoal apenas"]],
+  [11, "Em uma ocorrência com aglomeração urbana, a GCM deve:", "b", ["Agir com uso imediato da força", "Priorizar diálogo, controle e segurança coletiva", "Ignorar a situação", "Aguardar somente a Polícia Federal"]],
+  [12, "O patrulhamento ostensivo caracteriza-se por:", "b", ["Atuação secreta e disfarçada", "Presença visível para prevenção de delitos", "Investigação criminal sigilosa", "Atividade exclusiva da polícia judiciária"]],
+  [13, "A postura adequada do agente da GCM durante o serviço deve ser:", "c", ["Agressiva e intimidadora", "Displicente e informal", "Ética, disciplinada e profissional", "Autoritária em qualquer situação"]],
+  [14, "Em caso de flagrante delito, a GCM pode:", "b", ["Liberar o suspeito imediatamente", "Efetuar a detenção e encaminhar à autoridade competente", "Apenas registrar imagens", "Solicitar autorização judicial prévia"]],
+  [15, "O patrulhamento comunitário busca:", "a", ["Aproximar a GCM da população", "Reduzir o contato com moradores", "Atuar somente em grandes eventos", "Substituir totalmente as polícias estaduais"]],
+  [16, "Ao identificar atitude suspeita em praça pública, o agente deve:", "b", ["Ignorar a situação", "Realizar observação e abordagem técnica, se necessária", "Utilizar força física imediatamente", "Encerrar o patrulhamento"]],
+  [17, "A utilização progressiva da força significa:", "b", ["Uso máximo da força em qualquer ocorrência", "Emprego proporcional conforme a resistência apresentada", "Uso apenas de arma de fogo", "Evitar qualquer intervenção policial"]],
+  [18, "Qual documento normalmente registra as ocorrências atendidas pela GCM?", "b", ["Certidão de nascimento", "Relatório ou boletim de ocorrência", "Carteira funcional", "Auto de infração tributária"]],
+  [19, "O patrulhamento motorizado tem como vantagem:", "a", ["Maior deslocamento e rapidez no atendimento", "Eliminar a necessidade de comunicação", "Dispensa de planejamento operacional", "Exclusividade em áreas rurais"]],
+  [20, "A atuação integrada da GCM com outros órgãos de segurança visa:", "b", ["Competição entre instituições", "Melhor eficiência na proteção da população", "Redução do policiamento preventivo", "Exclusividade de atuação municipal"]],
+  [21, "Qual é o principal objetivo da negociação em ocorrências atendidas pela GCM?", "b", ["Demonstrar autoridade", "Resolver conflitos de forma pacífica e segura", "Aplicar punições imediatas", "Evitar comunicação com envolvidos"]],
+  [22, "A escuta ativa consiste em:", "b", ["Interromper o interlocutor constantemente", "Ouvir atentamente e compreender a mensagem transmitida", "Ignorar emoções durante o diálogo", "Falar mais que o cidadão"]],
+  [23, "Durante uma negociação, o agente da GCM deve manter:", "c", ["Tom agressivo", "Linguagem ofensiva", "Calma, equilíbrio emocional e profissionalismo", "Distância total da comunicação"]],
+  [24, "Em uma situação de conflito urbano, a primeira atitude recomendada é:", "b", ["Uso imediato da força", "Avaliar o cenário e tentar diálogo", "Encerrar a ocorrência rapidamente", "Ameaçar os envolvidos"]],
+  [25, "A empatia durante a negociação significa:", "b", ["Concordar com qualquer atitude da pessoa", "Colocar-se no lugar do outro para compreender a situação", "Demonstrar fraqueza operacional", "Evitar autoridade institucional"]],
+  [26, "O negociador da GCM deve evitar:", "c", ["Comunicação clara", "Escuta ativa", "Julgamentos precipitados e provocações", "Controle emocional"]],
+  [27, "Qual técnica ajuda a reduzir a tensão em uma ocorrência?", "b", ["Gritar ordens continuamente", "Manter contato verbal calmo e objetivo", "Aproximar-se bruscamente", "Ignorar o cidadão alterado"]],
+  [28, "Em uma negociação, o agente deve buscar:", "b", ["Vencer a discussão", "Construir solução segura para todos os envolvidos", "Intimidar o interlocutor", "Aplicar sanções imediatamente"]],
+  [29, "O controle emocional do agente é importante porque:", "b", ["Evita desgaste da viatura", "Contribui para decisões equilibradas e seguras", "Elimina necessidade de comunicação", "Reduz o tempo de patrulhamento apenas"]],
+  [30, "Durante uma mediação de conflito, a GCM deve:", "b", ["Favorecer uma das partes", "Agir com imparcialidade e respeito", "Encerrar o diálogo rapidamente", "Utilizar ameaça verbal"]],
+  [31, "A comunicação não verbal inclui:", "b", ["Apenas documentos escritos", "Gestos, postura e expressões corporais", "Somente uso do rádio comunicador", "Exclusivamente ordens verbais"]],
+  [32, "Qual atitude fortalece a confiança da população na GCM?", "a", ["Atendimento respeitoso e transparente", "Uso excessivo da força", "Falta de comunicação", "Tratamento desigual aos cidadãos"]],
+  [33, "Em situações de crise, o negociador deve:", "b", ["Falar rapidamente e sem ouvir", "Priorizar a preservação da vida", "Agir impulsivamente", "Evitar contato verbal"]],
+  [34, "A negociação preventiva ajuda a:", "a", ["Evitar escalada de conflitos", "Aumentar confrontos", "Reduzir comunicação operacional", "Substituir todas as ações policiais"]],
+  [35, "A postura ética na negociação exige:", "a", ["Respeito aos direitos humanos e à legalidade", "Ameaças constantes", "Uso arbitrário da autoridade", "Tratamento agressivo aos envolvidos"]],
+  [36, "A Guarda Civil Municipal (GCM) possui poder de polícia administrativa?", "b", ["Não, em nenhuma hipótese", "Sim, dentro das competências previstas em lei municipal e na proteção de bens, serviços e instalações", "Apenas em crimes federais", "Somente com autorização judicial"]],
+  [37, "O poder de polícia da GCM está relacionado principalmente à:", "c", ["Investigação criminal exclusiva", "Organização do Poder Judiciário", "Fiscalização e proteção preventiva do interesse público municipal", "Atuação militar em fronteiras"]],
+  [38, "A atuação da GCM no exercício do poder de polícia deve respeitar:", "c", ["Apenas ordens verbais superiores", "A vontade pessoal do agente", "A legalidade, proporcionalidade e os direitos fundamentais", "Somente normas internas da corporação"]],
+  [39, "Conforme o Estatuto Geral das Guardas Municipais, a GCM pode:", "a", ["Atuar preventivamente na segurança urbana", "Substituir integralmente as polícias estaduais", "Exercer função exclusiva do Poder Judiciário", "Investigar crimes federais de forma exclusiva"]],
+  [40, "O poder de polícia exercido pela GCM possui caráter:", "b", ["Exclusivamente judicial", "Preventivo e administrativo", "Somente investigativo", "Apenas legislativo"]],
+];
+
+const sergioSilvaProva0906Questions: RawQuestion[] = [
+  [1, "Qual é o principal papel do Guarda Municipal como agente transformador?", "c", ["Apenas vigiar patrimônios públicos", "Atuar somente em operações armadas", "Integrar segurança pública, bem-estar social e preservação ambiental", "Fiscalizar apenas o trânsito"]],
+  [2, "A polícia de proximidade busca:", "b", ["Afastar a população das instituições", "Fortalecer a confiança da comunidade", "Utilizar apenas repressão", "Reduzir ações preventivas"]],
+  [3, "A Guarda Ambiental atua diretamente:", "b", ["Na emissão de passaportes", "No combate a crimes ambientais", "Apenas em trânsito urbano", "Na fiscalização tributária"]],
+  [4, "O SNUC (sistema nacional de unidades de conservação) tem como principal finalidade:", "a", ["Garantir a preservação da biodiversidade e o uso sustentável dos recursos naturais", "Elaborar leis ambientais", "Cuidar da onça parda", "NRA"]],
+  [5, "Qual destas não é uma Unidade de Proteção Integral?", "d", ["Estação ecológica", "Monumento natural", "Reserva Biológica", "Parque Shangai"]],
+  [6, "A Rebio do Parque Equitativa protege:", "b", ["Área desértica", "Nascentes dos rios Saracuruna e Roncador", "Área industrial", "Zona exclusivamente urbana"]],
+  [7, "O Parque Natural Municipal da Taquara protege:", "b", ["Apenas trilhas urbanas", "Balneários e microclima local", "Somente áreas comerciais", "Rodovias estaduais"]],
+  [8, "O PNAMAX está localizado em qual distrito?", "d", ["Primeiro distrito", "Segundo distrito", "Terceiro distrito", "Quarto distrito (Xerém)"]],
+  [9, "O tráfico de animais silvestres na feira de Duque de Caxias:", "c", ["É recente", "Não existe mais", "Ocorre há mais de 40 anos", "Nunca foi registrado"]],
+  [10, "Qual bioma brasileiro é mais citado nas aulas?", "c", ["Cerrado", "Pantanal", "Mata Atlântica", "Caatinga"]],
+];
+
+const chavesQuestions: RawQuestion[] = [
+  [1, "A gestão integrada de segurança pública municipal pressupõe uma mudança de paradigma no enfrentamento da violência. Qual das alternativas abaixo descreve corretamente o objetivo central dessa abordagem?", "c", ["Centralizar todas as decisões de segurança nas mãos do Prefeito Municipal.", "Focar exclusivamente em ações repressivas executadas pela Guarda Municipal.", "Articular diferentes órgãos públicos e a sociedade civil para planejar e executar ações preventivas e repressivas de forma coordenada.", "Isolar as políticas municipais das diretrizes estaduais e federais para garantir autonomia total.", "Substituir a atuação das Polícias Militar e Civil por agentes de fiscalização urbana."]],
+  [2, "A Lei nº 13.675/2018 instituiu o Sistema Único de Segurança Pública (SUSP). Qual é a principal responsabilidade dos municípios dentro dessa arquitetura nacional?", "b", ["Comandar as operações de inteligência da Polícia Federal em seu território.", "Atuar prioritariamente na prevenção social da violência e no ordenamento urbano.", "Legislar sobre o Código Penal e o Código de Processo Penal.", "Manter presídios de segurança máxima para criminosos de alta periculosidade.", "Criar exércitos municipais para defesa das fronteiras da cidade."]],
+  [3, "O Gabinete de Gestão Integrada (GGI) é uma instância fundamental na segurança municipal. Qual é a sua função primordial?", "b", ["Atuar como um tribunal para julgar crimes cometidos no município.", "Servir como um fórum colegiado de deliberação e coordenação entre diferentes instituições de segurança e justiça.", "Substituir o Conselho Municipal de Segurança em todas as suas funções.", "Gerenciar exclusivamente a folha de pagamento dos servidores da segurança.", "Realizar patrulhamento ostensivo nas ruas do centro da cidade."]],
+  [4, "Na gestão municipal, a prevenção situacional da violência foca em:", "b", ["Oferecer cursos de capacitação profissional para jovens em situação de risco.", "Modificar o ambiente físico para reduzir oportunidades de crimes, como melhoria da iluminação e limpeza urbana.", "Aumentar o tempo de pena para crimes de furto e roubo.", "Realizar palestras sobre ética e cidadania nas escolas municipais.", "Distribuir cestas básicas para famílias de baixa renda."]],
+  [5, "Para que um município tenha acesso a recursos do Fundo Nacional de Segurança Pública, ele deve obrigatoriamente:", "c", ["Possuir uma Guarda Municipal armada com fuzis.", "Ter reduzido seus índices de criminalidade em pelo menos 50% no último ano.", "Elaborar e aprovar seu Plano Municipal de Segurança Pública e Defesa Social.", "Privatizar todos os serviços de vigilância de prédios públicos.", "Extinguir a Secretaria Municipal de Segurança."]],
+  [6, "De acordo com o Art. 144, § 8º da Constituição Federal, as guardas municipais destinam-se à:", "b", ["Investigação de crimes de colarinho branco.", "Proteção de bens, serviços e instalações do município.", "Execução de mandados de prisão expedidos pelo STF.", "Segurança pessoal exclusiva do Prefeito e dos Vereadores.", "Fiscalização de fronteiras e repressão ao tráfico internacional."]],
+  [7, "Qual instrumento é essencial para garantir a participação da sociedade civil na formulação de políticas de segurança municipal?", "b", ["O Gabinete do Prefeito.", "O Conselho Municipal de Segurança Pública.", "O Departamento de Compras da Prefeitura.", "A Corregedoria da Guarda Municipal.", "O Sindicato dos Servidores Públicos."]],
+  [8, "O uso de “manchas criminais” na gestão integrada serve para:", "b", ["Identificar visualmente os policiais que cometem infrações.", "Mapear geograficamente os locais com maior incidência de crimes para direcionar recursos e ações.", "Escolher as cores das novas viaturas da Guarda Municipal.", "Marcar os bairros que não receberão investimentos públicos.", "Classificar os criminosos por nível de periculosidade."]],
+  [9, "A intersetorialidade na segurança pública municipal significa que:", "c", ["A Secretaria de Segurança deve absorver todas as outras secretarias.", "A segurança é responsabilidade exclusiva da Guarda Municipal.", "Diferentes áreas (Saúde, Educação, Urbanismo, Assistência Social) devem trabalhar juntas para reduzir a violência.", "O município deve contratar empresas de diferentes setores para fazer a segurança.", "A polícia deve atuar em todos os setores da economia privada."]],
+  [10, "Programas municipais que visam a mediação de conflitos comunitários são exemplos de:", "b", ["Repressão qualificada.", "Promoção de cultura de paz e resolução não violenta de disputas.", "Terceirização do sistema judiciário.", "Desarmamento obrigatório da população civil.", "Fiscalização de trânsito."]],
+];
+
 const rawSubjects: RawSubject[] = [
   {
     id: librasSubject.id,
@@ -33,6 +145,27 @@ const rawSubjects: RawSubject[] = [
       card.correctAnswer,
       card.options.map(option => option.text),
     ]),
+  },
+  {
+    id: "local-valerio-legislacao-penal-constitucional",
+    name: "Legislação Penal e Constitucional - Gabarito não oficial",
+    teacher_name: "Valério",
+    description: "Questões importadas do PDF Instrutor VALÉRIO, com respostas marcadas por círculo roxo. Gabarito não oficial.",
+    questions: valerioQuestions,
+  },
+  {
+    id: "local-m-antonio-patrulhamento-perimetro-urbano",
+    name: "Patrulhamento em Perímetro Urbano",
+    teacher_name: "M. Antônio",
+    description: "Questões importadas do PDF Instrutor M. Antônio, com respostas indicadas no arquivo.",
+    questions: mAntonioQuestions,
+  },
+  {
+    id: "local-chaves-gestao-integrada-seguranca-publica",
+    name: "Gestão Integrada de Segurança Pública Municipal",
+    teacher_name: "Chaves",
+    description: "Questões importadas do PDF Avaliação Gestão Integrada de Segurança Pública Municipal, com gabarito informado no arquivo.",
+    questions: chavesQuestions,
   },
   {
     id: "local-neuseli-gabarito-nao-oficial",
@@ -162,9 +295,9 @@ const rawSubjects: RawSubject[] = [
   },
   {
     id: "local-saude-seguranca-trabalho-etica-profissional",
-    name: "Saúde e Segurança do Trabalho / Ética Profissional",
-    teacher_name: "Simulado Clynton",
-    description: "Questões de múltipla escolha importadas do PDF SIMULADO CLYNTON.",
+    name: "Saúde e Segurança do Trabalho / Ética Profissional - Gabarito não oficial",
+    teacher_name: "Clylton",
+    description: "Questões importadas do PDF Clylton, com gabarito não oficial.",
     questions: [
       [1, "A saúde do trabalhador, no contexto da Guarda Municipal, deve ser entendida como:", "c", ["Apenas ausência de doenças físicas.", "Capacidade de trabalhar armado.", "Bem-estar físico, mental e social.", "Aptidão exclusiva para atividades operacionais."]],
       [2, "Um guarda municipal emocionalmente desgastado pode apresentar:", "c", ["Maior precisão operacional.", "Redução da probabilidade de erro.", "Comprometimento da atuação profissional.", "Melhora no relacionamento social."]],
@@ -387,14 +520,14 @@ const rawSubjects: RawSubject[] = [
       [7, "A conversão proibida é indicada por placa de:", "a", ["Regulamentação", "Advertência", "Obras", "Serviços auxiliares Trânsito"]],
       [8, "O principal fator humano nos acidentes é:", "c", ["Clima", "Estrada", "Comportamento do condutor", "Cor do veículo"]],
       [9, "O uso do cinto de segurança é obrigatório para:", "c", ["Apenas motorista", "Apenas passageiros traseiros", "Todos os ocupantes", "Apenas crianças Trânsito"]],
-      [10, "A sinalização horizontal é feita por:", "a", ["Placas", "Pinturas na via", "Semáforos", "Cones"]],
+      [10, "A sinalização horizontal é feita por:", "b", ["Placas", "Pinturas na via", "Semáforos", "Cones"]],
       [11, "O agente deve priorizar em uma ocorrência:", "a", ["Sua segurança", "O veículo", "A multa", "O trânsito parado Trânsito"]],
       [12, "O comportamento agressivo no trânsito pode causar:", "c", ["Segurança", "Redução de acidentes", "Conflitos e acidentes", "Menos infrações"]],
       [13, "O agente deve sinalizar o local de acidente para:", "b", ["Melhorar estética", "Evitar novos acidentes", "Aumentar multas", "Reduzir iluminação Trânsito"]],
       [14, "A placa de “Curva Perigosa” é de:", "b", ["Regulamentação", "Advertência", "Indicação", "Obras"]],
       [15, "A atuação da Guarda Municipal no trânsito contribui para:", "a", ["Organização e segurança viária", "Aumento de acidentes", "Redução da sinalização", "Eliminação de pedestres Trânsito"]],
       [16, "A sinalização de trânsito é regulamentada pelo:", "c", ["Código Penal Brasileiro", "Código Civil Brasileiro", "Código de Trânsito Brasileiro", "Estatuto da Cidade"]],
-      [17, "A cor amarela na sinalização horizontal é utilizada para:", "a", ["Separar fluxos no mesmo sentido", "Separar fluxos em sentidos contrários", "Indicar ciclofaixas", "Demarcar vagas especiais Trânsito"]],
+      [17, "A cor amarela na sinalização horizontal é utilizada para:", "b", ["Separar fluxos no mesmo sentido", "Separar fluxos em sentidos contrários", "Indicar ciclofaixas", "Demarcar vagas especiais Trânsito"]],
       [18, "A cor azul na sinalização horizontal é usada para:", "c", ["Separar faixas de rolamento", "Criar contraste no pavimento", "Demarcar vagas especiais, como PCD e idosos", "Indicar ultrapassagem proibida"]],
       [19, "Durante a atuação na via, o agente deve:", "c", ["Ficar de costas para o fluxo", "Permanecer no centro da via", "Posicionar-se em local visível", "Usar o celular frequentemente Trânsito"]],
       [20, "No gesto de parada, o agente deve utilizar:", "b", ["Movimento rápido dos braços", "Braço levantado ou aberto com a palma voltada ao veículo", "Apenas o apito", "Bastão apagado"]],
@@ -412,7 +545,7 @@ const rawSubjects: RawSubject[] = [
       [32, "O órgão executivo federal de tranito é:", "c", ["DETRAN", "CETRAN", "SENATRAN", "CONTRAN"]],
       [33, "Nas infrações concorrentes, normalmente será lavrado:", "b", ["Dois autos de infração", "Apenas um auto de infração", "Nenhum auto", "Um boletim sem multa Trânsito"]],
       [34, "Qual exemplo representa infrações concomitantes?", "a", ["Sem cinto e usando celular", "Ultrapassar pelo acostamento", "Parar em fila dupla", "Estacionar na contramão"]],
-      [35, "O que caracteriza uma infração continuada?", "a", ["A infração ocorre apenas uma vez", "A infração é cometida em cidades diferentes", "A infração é vista mais de uma vez por agentes diferentes", "A infração ocorre apenas em rodovias Trânsito"]],
+      [35, "O que caracteriza uma infração continuada?", "c", ["A infração ocorre apenas uma vez", "A infração é cometida em cidades diferentes", "A infração é vista mais de uma vez por agentes diferentes", "A infração ocorre apenas em rodovias Trânsito"]],
       [36, "A cor preta na sinalização horizontal tem a função de:", "b", ["Proibir estacionamento", "Criar contraste com o pavimento", "Delimitar ciclofaixas", "Indicar parada obrigatória"]],
       [37, "As marcas de canalização servem para:", "a", ["Organizar o fluxo de veículos", "Medir velocidade", "Identificar motoristas", "Controlar semáforos Trânsito"]],
       [38, "Durante um acidente de trânsito, a Guarda Municipal pode:", "c", ["Ignorar a ocorrência", "Apenas observar", "Organizar o fluxo e isolar a área", "Aplicar pena judicial aos envolvidos"]],
@@ -654,6 +787,55 @@ const provao0806SourceQuestions: RawQuestion[] = [
 
 const neuseliProvaoQuestions = rawSubjects.find(subject => subject.id === "local-neuseli-gabarito-nao-oficial")?.questions ?? [];
 const paulaProvaoQuestions = rawSubjects.find(subject => subject.id === "local-paula-drogas-ilicitas")?.questions ?? [];
+const clyltonProvaoQuestions = rawSubjects.find(subject => subject.id === "local-saude-seguranca-trabalho-etica-profissional")?.questions ?? [];
+const carlosCapelaoProvaoQuestions = rawSubjects.find(subject => subject.id === "local-capelao-carlos-movimentos-sociais")?.questions ?? [];
+const lucianaSampaioProvaoQuestions = rawSubjects.find(subject => subject.id === "local-luciana-sampaio-relacoes-humanas-gabarito-nao-oficial")?.questions ?? [];
+const provao0906Questions: RawQuestion[] = [
+  ...sergioSilvaProva0906Questions.map<RawQuestion>(([, text, correct, options], index) => [
+    index + 1,
+    text,
+    correct,
+    options,
+  ]),
+  ...carlosCapelaoProvaoQuestions.map<RawQuestion>(([, text, correct, options], index) => [
+    sergioSilvaProva0906Questions.length + index + 1,
+    text,
+    correct,
+    options,
+  ]),
+  ...lucianaSampaioProvaoQuestions.map<RawQuestion>(([, text, correct, options], index) => [
+    sergioSilvaProva0906Questions.length + carlosCapelaoProvaoQuestions.length + index + 1,
+    text,
+    correct,
+    options,
+  ]),
+];
+const provao1106Questions: RawQuestion[] = [
+  ...valerioQuestions.map<RawQuestion>(([, text, correct, options], index) => [
+    index + 1,
+    text,
+    correct,
+    options,
+  ]),
+  ...mAntonioQuestions.map<RawQuestion>(([, text, correct, options], index) => [
+    valerioQuestions.length + index + 1,
+    text,
+    correct,
+    options,
+  ]),
+  ...clyltonProvaoQuestions.map<RawQuestion>(([, text, correct, options], index) => [
+    valerioQuestions.length + mAntonioQuestions.length + index + 1,
+    text,
+    correct,
+    options,
+  ]),
+  ...chavesQuestions.map<RawQuestion>(([, text, correct, options], index) => [
+    valerioQuestions.length + mAntonioQuestions.length + clyltonProvaoQuestions.length + index + 1,
+    text,
+    correct,
+    options,
+  ]),
+];
 
 rawSubjects.unshift({
   id: "local-provao-08-06",
@@ -675,6 +857,22 @@ rawSubjects.unshift({
       options,
     ]),
   ],
+});
+
+rawSubjects.unshift({
+  id: "local-provao-11-06",
+  name: "Provão 11/06",
+  teacher_name: "Valério + M. Antônio + Clylton + Chaves",
+  description: "Provão com questões dos PDFs dos instrutores Valério, M. Antônio, Clylton e Chaves. Valério e Clylton estão como gabarito não oficial.",
+  questions: provao1106Questions,
+});
+
+rawSubjects.unshift({
+  id: "local-provao-09-06",
+  name: "Provão 09/06",
+  teacher_name: "S. Silva + Carlos Capelão + L. Sampaio",
+  description: "Provão com a prova do S. Silva e todas as questões cadastradas de Carlos Capelão e L. Sampaio.",
+  questions: provao0906Questions,
 });
 
 export const localSubjects: Subject[] = rawSubjects.map(({ id, name, teacher_name, description }) => ({

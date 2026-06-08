@@ -11,7 +11,7 @@ import { loadProgressAnswers, resetProgressAnswers } from '../lib/localProgress'
 import { librasInverseSubjectId, librasSubjectId } from '../data/librasCards';
 
 const logoUrl = 'https://firebasestorage.googleapis.com/v0/b/gcm-caxias-17535.firebasestorage.app/o/logo-gcm-sem%20fundo.png?alt=media&token=abcb7bfd-cecf-4101-87b9-83f942235ebd';
-const provaoSubjectId = 'local-provao-08-06';
+const featuredSubjectIds = ['local-provao-09-06', 'local-provao-11-06'];
 
 type SortMode = 'default' | 'difficulty';
 type SubjectDifficulty = 'URUBU' | 'ALTA' | 'FÁCIL';
@@ -25,12 +25,17 @@ const difficultyOrder: Record<SubjectDifficulty, number> = {
 function getSubjectDifficulty(subjectId: string): SubjectDifficulty {
   if (subjectId === 'local-marcio-legislacao-penal-eca') return 'URUBU';
   if (
-    subjectId === provaoSubjectId ||
+    featuredSubjectIds.includes(subjectId) ||
     subjectId === librasSubjectId ||
     subjectId === librasInverseSubjectId ||
     subjectId === 'local-marcelo-porte-arma-fogo'
   ) return 'ALTA';
   return 'FÁCIL';
+}
+
+function getFeaturedSubjectRank(subjectId: string) {
+  const rank = featuredSubjectIds.indexOf(subjectId);
+  return rank === -1 ? featuredSubjectIds.length : rank;
 }
 
 type SubjectStats = {
@@ -170,9 +175,7 @@ export default function DashboardPage({ onSelectSubject, onAdmin, onLogout, isGu
     return stats
       .map((item, index) => ({ item, index }))
       .sort((a, b) => {
-        const featuredDelta =
-          (a.item.subject.id === provaoSubjectId ? 0 : 1) -
-          (b.item.subject.id === provaoSubjectId ? 0 : 1);
+        const featuredDelta = getFeaturedSubjectRank(a.item.subject.id) - getFeaturedSubjectRank(b.item.subject.id);
         if (featuredDelta !== 0) return featuredDelta;
 
         if (sortMode !== 'difficulty') return a.index - b.index;
@@ -323,7 +326,7 @@ export default function DashboardPage({ onSelectSubject, onAdmin, onLogout, isGu
                 const isComplete = answered === total && total > 0;
                 const isStarted = answered > 0;
                 const accuracy = answered > 0 ? Math.round((correct / answered) * 100) : 0;
-                const isProvaoSubject = subject.id === provaoSubjectId;
+                const isProvaoSubject = featuredSubjectIds.includes(subject.id);
                 const isLibrasSubject = subject.id === librasSubjectId || subject.id === librasInverseSubjectId;
                 const isMarcioSubject = subject.id === 'local-marcio-legislacao-penal-eca';
                 const difficulty = getSubjectDifficulty(subject.id);
