@@ -805,6 +805,7 @@ const paulaProvaoQuestions = rawSubjects.find(subject => subject.id === "local-p
 const clyltonProvaoQuestions = rawSubjects.find(subject => subject.id === "local-saude-seguranca-trabalho-etica-profissional")?.questions ?? [];
 const carlosCapelaoProvaoQuestions = rawSubjects.find(subject => subject.id === "local-capelao-carlos-movimentos-sociais")?.questions ?? [];
 const lucianaSampaioProvaoQuestions = rawSubjects.find(subject => subject.id === "local-luciana-sampaio-relacoes-humanas-gabarito-nao-oficial")?.questions ?? [];
+const marcioProvaoQuestions = rawSubjects.find(subject => subject.id === "local-marcio-legislacao-penal-eca")?.questions ?? [];
 const provao0906Questions: RawQuestion[] = [
   ...sergioSilvaProva0906Questions.map<RawQuestion>(([, text, correct, options], index) => [
     index + 1,
@@ -850,6 +851,12 @@ const provao1106Questions: RawQuestion[] = [
     correct,
     options,
   ]),
+  ...marcioProvaoQuestions.map<RawQuestion>(([, text, correct, options], index) => [
+    valerioQuestions.length + mAntonioQuestions.length + clyltonProvaoQuestions.length + chavesQuestions.length + index + 1,
+    text,
+    correct,
+    options,
+  ]),
 ];
 
 rawSubjects.unshift({
@@ -877,8 +884,8 @@ rawSubjects.unshift({
 rawSubjects.unshift({
   id: "local-provao-11-06",
   name: "Provão 11/06",
-  teacher_name: "Valério + M. Antônio + Clylton + Chaves",
-  description: "Provão com questões dos PDFs dos instrutores Valério, M. Antônio, Clylton e Chaves. Valério e Clylton estão como gabarito não oficial.",
+  teacher_name: "Valério + M. Antônio + Clylton + Chaves + Márcio",
+  description: "Provão com questões dos PDFs dos instrutores Valério, M. Antônio, Clylton, Chaves e Márcio. Valério e Clylton estão como gabarito não oficial.",
   questions: provao1106Questions,
 });
 
