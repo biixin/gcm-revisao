@@ -134,6 +134,49 @@ const rinaldoQuestions: RawQuestion[] = [
   [10, "Assinale a alternativa em que o pronome foi empregado corretamente:", "c", ["Entre eu e você não há problemas", "Isto é pra mim resolver", "Ele entregou o livro para eu ler", "Não há nada entre eu e ela"]],
 ];
 
+const grativolSociologiaViolenciaQuestions: RawQuestion[] = [
+  [1, "Criminalidade pode ser definida como:", "a", ["O conjunto de infrações ocorridas em determinado tempo e lugar.", "Qualquer conflito interpessoal.", "Todo ato agressivo praticado na sociedade.", "Apenas crimes contra a vida.", "Somente delitos registrados judicialmente."]],
+  [2, "Segundo Comte, o estágio positivo caracteriza-se pelo predomínio:", "e", ["Da tradição oral.", "Do poder militar.", "Do pensamento mítico.", "Da fé religiosa.", "Da ciência e da indústria."]],
+  [3, "Para Durkheim, instituições como família e escola são importantes porque:", "c", ["Reduzem a industrialização.", "Eliminam toda desigualdade.", "Favorecem a socialização dos indivíduos.", "Impedem a urbanização.", "Produzem controle econômico."]],
+  [4, "A ação social racional com relação a fins possui foco principal:", "d", ["Na emoção humana.", "Na fé religiosa.", "Nos hábitos familiares.", "No resultado pretendido.", "Na tradição cultural."]],
+  [5, "Émile Durkheim defendia que a sociologia deveria estudar:", "b", ["Apenas ideias abstratas.", "Fatos sociais concretos.", "Questões individuais subjetivas.", "Apenas conflitos econômicos.", "Exclusivamente fenômenos religiosos."]],
+  [6, "Segundo o curso, segurança pública não significa apenas:", "b", ["Existência de leis penais.", "Ausência de crime.", "Atuação das forças policiais.", "Controle territorial do Estado.", "Presença de policiamento ostensivo."]],
+  [7, "A ação social tradicional está ligada:", "b", ["À emoção momentânea.", "Aos hábitos e costumes enraizados.", "À estratégia política.", "À racionalidade técnica.", "Ao cálculo econômico."]],
+  [8, "A Sociologia da Violência compreende a violência como:", "d", ["Um fenômeno apenas psicológico.", "Um comportamento exclusivamente individual.", "Um simples caso policial isolado.", "Um fenômeno social, cultural e estrutural.", "Uma consequência exclusiva da pobreza."]],
+  [9, "Qual dos fatores abaixo foi apresentado como causa do aumento da criminalidade?", "c", ["Desenvolvimento científico.", "Industrialização tecnológica.", "Crescimento demográfico.", "Expansão universitária.", "Turismo urbano."]],
+  [10, "O principal desafio do agente de segurança é:", "e", ["Priorizar exclusivamente a repressão.", "Eliminar toda subjetividade humana.", "Trabalhar apenas com estatísticas.", "Desconsiderar testemunhos emocionais.", "Navegar entre relatos subjetivos e fatos concretos."]],
+  [11, "Karl Marx entendia a sociedade como marcada:", "d", ["Pela harmonia absoluta.", "Pela ausência de conflitos.", "Pelo consenso permanente.", "Pela luta de classes.", "Pela neutralidade econômica."]],
+  [12, "A Escola de Chicago buscava compreender:", "b", ["Exclusivamente o crescimento econômico.", "A relação entre urbanização e criminalidade.", "A criminalidade rural.", "Apenas conflitos políticos europeus.", "Fenômenos religiosos urbanos."]],
+  [13, "Qual das situações abaixo NÃO é considerada violência sob a perspectiva sociológica estudada?", "b", ["Agressão física voluntária.", "Desastre natural causado por chuvas intensas.", "Intimidação moral.", "Tortura psicológica.", "Coação social deliberada."]],
+  [14, "A cobertura sensacionalista da violência pela mídia pode contribuir para:", "d", ["Redução automática do medo coletivo.", "Neutralização da violência urbana.", "Diminuição da percepção criminal.", "Banalização da violência.", "Fortalecimento da coesão social."]],
+  [15, "A remoção de favelas nas décadas de 1960 e 1970 contribuiu para:", "c", ["O fim da segregação territorial.", "A integração social plena.", "A periferização da pobreza.", "O retorno das populações ao centro.", "A diminuição da desigualdade urbana."]],
+  [16, "O “efeito de túnel” mencionado na aula refere-se:", "e", ["À manipulação de imagens.", "À corrupção institucional.", "À falha de equipamentos policiais.", "À ausência de policiamento.", "Ao estresse em situações traumáticas."]],
+  [17, "Segundo a Escola de Chicago, o crime é:", "e", ["Consequência exclusiva da genética.", "Resultado apenas biológico.", "Exclusivamente hereditário.", "Fenômeno exclusivamente psicológico.", "Produto do meio social."]],
+  [18, "Ernest Burgess apresentava a cidade como:", "d", ["Uma estrutura militar.", "Uma divisão exclusivamente econômica.", "Um sistema linear.", "Um conjunto de anéis concêntricos.", "Um território rural."]],
+  [19, "Segundo o conteúdo ministrado, crimes “visíveis” podem:", "e", ["Ser irrelevantes para a opinião pública.", "Não impactar a percepção social.", "Produzir apenas efeitos estatísticos.", "Produzir menor sensação de insegurança.", "Gerar pânico coletivo mesmo em pequena escala."]],
+  [20, "A anomia social representa:", "c", ["Equilíbrio moral coletivo.", "Fortalecimento das normas sociais.", "Enfraquecimento das regras de convivência.", "Organização institucional plena.", "Crescimento econômico acelerado."]],
+  [21, "A impunidade e a corrupção foram apresentadas como:", "d", ["Fenômenos sem relação com a violência.", "Problemas exclusivamente políticos.", "Fatores exclusivamente econômicos.", "Elementos de banalização da violência.", "Consequências naturais da urbanização."]],
+  [22, "No estágio teológico de Comte, a explicação da vida baseava-se:", "a", ["Em elementos religiosos e míticos.", "Na ciência experimental.", "No racionalismo matemático.", "Na industrialização.", "No empirismo científico."]],
+  [23, "Mais-valia representa:", "c", ["O equilíbrio econômico perfeito.", "A remuneração integral do trabalhador.", "O lucro gerado pela exploração do trabalho excedente.", "O controle sindical da produção.", "O investimento estatal."]],
+  [24, "São exemplos de verdade objetiva:", "e", ["Sentimentos pessoais.", "Emoções coletivas.", "Relatos informais.", "Impressões subjetivas.", "Vestígios materiais e exames periciais."]],
+  [25, "Segundo Marx, o proletariado:", "c", ["Possui capital industrial.", "Controla os meios de produção.", "Vende sua força de trabalho.", "Representa a elite econômica.", "Exerce domínio financeiro."]],
+  [26, "A verdade objetiva na segurança pública está associada:", "d", ["Aos relatos subjetivos das vítimas.", "Aos boatos divulgados nas redes sociais.", "À percepção emocional da população.", "Aos fatos concretos e evidências materiais.", "À opinião pública."]],
+  [27, "A Alegoria da Caverna de Platão foi utilizada no curso para representar:", "c", ["O crescimento urbano.", "A expansão econômica.", "A limitação da percepção humana.", "O avanço tecnológico.", "A repressão estatal."]],
+  [28, "Auguste Comte chamou sua teoria de:", "a", ["Física social.", "Funcionalismo estrutural.", "Dialética histórica.", "Materialismo histórico.", "Sociologia da ação social."]],
+  [29, "Sobre violência e criminalidade, é correto afirmar que:", "b", ["Criminalidade é sempre violência física.", "São conceitos relacionados, porém distintos.", "Violência é sempre crime.", "Não possuem relação entre si.", "São conceitos idênticos."]],
+  [30, "Segundo a lente do conflito, a violência decorre principalmente:", "d", ["De mudanças climáticas.", "Da ausência de tecnologia policial.", "De fatores biológicos.", "Da desigualdade estrutural e marginalização.", "Da desorganização natural das cidades."]],
+  [31, "Segundo o conteúdo ministrado, o guarda municipal deve:", "e", ["Ignorar narrativas subjetivas.", "Atuar exclusivamente de forma repressiva.", "Priorizar apenas dados estatísticos.", "Desconsiderar emoções das vítimas.", "Atuar com escuta ativa e empatia."]],
+  [32, "A ação social afetiva é motivada principalmente:", "e", ["Pela tradição cultural.", "Pela disciplina institucional.", "Pela racionalidade econômica.", "Pelo cálculo científico.", "Pelos sentimentos e emoções."]],
+  [33, "Segundo a perspectiva sociológica apresentada no curso, a violência pressupõe:", "a", ["Intenção de causar dano.", "Apenas agressão física.", "Ação involuntária.", "Ausência de vontade humana.", "Exclusivamente dano patrimonial."]],
+  [34, "A “cifra negra” corresponde:", "a", ["Aos crimes não registrados oficialmente.", "Aos crimes praticados pelo crime organizado.", "Aos crimes violentos televisionados.", "Aos delitos solucionados pela polícia.", "À manipulação de estatísticas oficiais."]],
+  [35, "A sociologia é considerada uma ciência oscilante porque:", "b", ["Não possui método científico.", "Trabalha com várias interpretações da realidade social.", "Rejeita pesquisas sociais.", "Não utiliza conceitos teóricos.", "Estuda apenas fenômenos naturais."]],
+  [36, "A verdade subjetiva depende:", "e", ["Exclusivamente da perícia técnica.", "Da legalidade processual.", "Da comprovação laboratorial.", "Apenas de estatísticas criminais.", "Da percepção individual da realidade."]],
+  [37, "Max Weber criticava a sociologia positivista porque:", "b", ["Rejeitava os dados estatísticos.", "Ignorava as intenções dos indivíduos.", "Estudava apenas economia.", "Não aceitava pesquisas empíricas.", "Defendia exclusivamente a religião."]],
+  [38, "A ação social racional com relação a valores ocorre quando:", "b", ["O comportamento é automático.", "A ação é guiada por convicções éticas ou morais.", "O indivíduo age sem consciência.", "O indivíduo age impulsivamente.", "O objetivo é exclusivamente financeiro."]],
+  [39, "Conversas em redes sociais e aplicativos de mensagens influenciam principalmente:", "e", ["O inquérito policial.", "A cadeia de custódia.", "A perícia criminal.", "O exame técnico-científico.", "A verdade subjetiva."]],
+  [40, "A Reforma Pereira Passos no Rio de Janeiro resultou:", "e", ["Na ocupação planejada dos morros.", "Na integração imediata das classes sociais.", "Na eliminação das favelas.", "Na redução automática da violência urbana.", "Na valorização do centro e expulsão da população pobre."]],
+];
+
 const rawSubjects: RawSubject[] = [
   {
     id: librasSubject.id,
@@ -186,6 +229,13 @@ const rawSubjects: RawSubject[] = [
     teacher_name: "Rinaldo",
     description: "Questões importadas do PDF RINALDO - QUESTOES - PROVA, com gabarito marcado por bolinha preta.",
     questions: rinaldoQuestions,
+  },
+  {
+    id: "local-grativol-sociologia-violencia",
+    name: "Sociologia da Violência",
+    teacher_name: "Grativol",
+    description: "Questões importadas do PDF CURSO DE FORMAÇÃO GCM DUQUE DE CAXIAS 2026 SOCIOLOGIA DA VIOLÊNCIA.",
+    questions: grativolSociologiaViolenciaQuestions,
   },
   {
     id: "local-neuseli-gabarito-nao-oficial",
@@ -827,6 +877,7 @@ const marceloProvaoQuestions = rawSubjects.find(subject => subject.id === "local
 const emersonProvaoQuestions = rawSubjects.find(subject => subject.id === "local-emerson-incendio-seguranca-patrimonial")?.questions ?? [];
 const rinaldoProvaoQuestions = rawSubjects.find(subject => subject.id === "local-rinaldo-portugues")?.questions ?? [];
 const mandarinoProvaoQuestions = rawSubjects.find(subject => subject.id === "local-leandro-transito")?.questions ?? [];
+const grativolProvaoQuestions = rawSubjects.find(subject => subject.id === "local-grativol-sociologia-violencia")?.questions ?? [];
 const provao0906Questions: RawQuestion[] = [
   ...sergioSilvaProva0906Questions.map<RawQuestion>(([, text, correct, options], index) => [
     index + 1,
@@ -874,6 +925,12 @@ const provao1206Questions: RawQuestion[] = [
   ]),
   ...mandarinoProvaoQuestions.map<RawQuestion>(([, text, correct, options], index) => [
     jailtonProvaoQuestions.length + marceloProvaoQuestions.length + emersonProvaoQuestions.length + rinaldoProvaoQuestions.length + index + 1,
+    text,
+    correct,
+    options,
+  ]),
+  ...grativolProvaoQuestions.map<RawQuestion>(([, text, correct, options], index) => [
+    jailtonProvaoQuestions.length + marceloProvaoQuestions.length + emersonProvaoQuestions.length + rinaldoProvaoQuestions.length + mandarinoProvaoQuestions.length + index + 1,
     text,
     correct,
     options,
@@ -936,9 +993,9 @@ rawSubjects.unshift({
 
 rawSubjects.unshift({
   id: "local-provao-12-06",
-  name: "Provão 12/06",
-  teacher_name: "Jailton + Marcelo + Emerson + Rinaldo + Mandarino",
-  description: "Provão com todas as questões cadastradas dos instrutores Jailton, Marcelo, Emerson, Rinaldo e Mandarino.",
+  name: "Provão 13/06",
+  teacher_name: "Jailton + Marcelo + Emerson + Rinaldo + Mandarino + Grativol",
+  description: "Provão com todas as questões cadastradas dos instrutores Jailton, Marcelo, Emerson, Rinaldo, Mandarino e Grativol.",
   questions: provao1206Questions,
 });
 
