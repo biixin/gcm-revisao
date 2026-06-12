@@ -121,6 +121,19 @@ const chavesQuestions: RawQuestion[] = [
   [10, "Programas municipais que visam a mediação de conflitos comunitários são exemplos de:", "b", ["Repressão qualificada.", "Promoção de cultura de paz e resolução não violenta de disputas.", "Terceirização do sistema judiciário.", "Desarmamento obrigatório da população civil.", "Fiscalização de trânsito."]],
 ];
 
+const rinaldoQuestions: RawQuestion[] = [
+  [1, "Ele obedeceu ___ instrutor.", "c", ["o", "do", "ao", "com"]],
+  [2, "Ele aspira ___ cargo de comissário.", "a", ["ao", "o", "de", "para"]],
+  [3, "Ela prefere café com leite ___ café puro.", "c", ["do que", "Para", "a", "com"]],
+  [4, "Ele demonstrou aversão ___ mentiras do amigo do curso.", "c", ["com as", "pelas", "às", "nas"]],
+  [5, "Havia ____ pessoas interessadas na palestra de rádio.", "b", ["bastante", "bastantes", "bastantes de", "bastante de"]],
+  [6, "Seguem ____ ao e-mail as planilhas revisadas.", "d", ["incluso", "inclusa", "inclusos", "inclusas"]],
+  [7, "Elas ____ resolveram o problema sem ajuda.", "c", ["mesmo", "mesma", "mesmas", "mesmamente"]],
+  [8, "Em qual alternativa a crase é facultativa?", "a", ["Entreguei o documento à minha professora", "Fui à Bahia nas férias", "Refiro-me àquela menina", "Chegamos à noite"]],
+  [9, "Assinale a alternativa incorreta quanto ao uso de crase:", "b", ["O juiz ficou indiferente à defesa apresentada", "Chegamos à Roma depois do almoço", "Assistimos à peça tetral ontem", "Obedeço às normas da empresa"]],
+  [10, "Assinale a alternativa em que o pronome foi empregado corretamente:", "c", ["Entre eu e você não há problemas", "Isto é pra mim resolver", "Ele entregou o livro para eu ler", "Não há nada entre eu e ela"]],
+];
+
 const rawSubjects: RawSubject[] = [
   {
     id: librasSubject.id,
@@ -166,6 +179,13 @@ const rawSubjects: RawSubject[] = [
     teacher_name: "Chaves",
     description: "Questões importadas do PDF Avaliação Gestão Integrada de Segurança Pública Municipal, com gabarito informado no arquivo.",
     questions: chavesQuestions,
+  },
+  {
+    id: "local-rinaldo-portugues",
+    name: "Português",
+    teacher_name: "Rinaldo",
+    description: "Questões importadas do PDF RINALDO - QUESTOES - PROVA, com gabarito marcado por bolinha preta.",
+    questions: rinaldoQuestions,
   },
   {
     id: "local-neuseli-gabarito-nao-oficial",
@@ -474,7 +494,7 @@ const rawSubjects: RawSubject[] = [
       [37, "Conduta ao entrar em área com detector de metais portando arma:", "b", ["Passar direto", "Avisar a segurança antes, apresentar documentos", "Esconder a arma", "Deixar a arma no carro"]],
       [38, "Perder ou ter arma furtada exige:", "b", ["Nada, só comprar outra", "Comunicar imediatamente à PF ou Exército e registrar BO", "Avisar só o clube", "Esperar 30 dias"]],
       [39, "Menor de idade pode manusear arma de fogo:", "b", ["Nunca", "Sim, a partir de 14 anos em clube de tiro, com autorização dos responsáveis", "Só com 18 anos", "Só com 21 anos"]],
-      [40, "Portar arma com CRAF vencido é:", "b", ["Ponto A", "Ponto B", "Ponto C", "Ponto D"]],
+      [40, "Portar arma com CRAF vencido é:", "b", ["Permitido por 90 dias", "Porte ilegal", "Apenas infração administrativa", "Permitido se o CR estiver válido"]],
     ],
   },
   {
@@ -806,6 +826,10 @@ const clyltonProvaoQuestions = rawSubjects.find(subject => subject.id === "local
 const carlosCapelaoProvaoQuestions = rawSubjects.find(subject => subject.id === "local-capelao-carlos-movimentos-sociais")?.questions ?? [];
 const lucianaSampaioProvaoQuestions = rawSubjects.find(subject => subject.id === "local-luciana-sampaio-relacoes-humanas-gabarito-nao-oficial")?.questions ?? [];
 const marcioProvaoQuestions = rawSubjects.find(subject => subject.id === "local-marcio-legislacao-penal-eca")?.questions ?? [];
+const jailtonProvaoQuestions = rawSubjects.find(subject => subject.id === "local-jailton-uso-progressivo-forca")?.questions ?? [];
+const marceloProvaoQuestions = rawSubjects.find(subject => subject.id === "local-marcelo-porte-arma-fogo")?.questions ?? [];
+const emersonProvaoQuestions = rawSubjects.find(subject => subject.id === "local-emerson-incendio-seguranca-patrimonial")?.questions ?? [];
+const rinaldoProvaoQuestions = rawSubjects.find(subject => subject.id === "local-rinaldo-portugues")?.questions ?? [];
 const provao0906Questions: RawQuestion[] = [
   ...sergioSilvaProva0906Questions.map<RawQuestion>(([, text, correct, options], index) => [
     index + 1,
@@ -821,6 +845,32 @@ const provao0906Questions: RawQuestion[] = [
   ]),
   ...lucianaSampaioProvaoQuestions.map<RawQuestion>(([, text, correct, options], index) => [
     sergioSilvaProva0906Questions.length + carlosCapelaoProvaoQuestions.length + index + 1,
+    text,
+    correct,
+    options,
+  ]),
+];
+const provao1206Questions: RawQuestion[] = [
+  ...jailtonProvaoQuestions.map<RawQuestion>(([, text, correct, options], index) => [
+    index + 1,
+    text,
+    correct,
+    options,
+  ]),
+  ...marceloProvaoQuestions.map<RawQuestion>(([, text, correct, options], index) => [
+    jailtonProvaoQuestions.length + index + 1,
+    text,
+    correct,
+    options,
+  ]),
+  ...emersonProvaoQuestions.map<RawQuestion>(([, text, correct, options], index) => [
+    jailtonProvaoQuestions.length + marceloProvaoQuestions.length + index + 1,
+    text,
+    correct,
+    options,
+  ]),
+  ...rinaldoProvaoQuestions.map<RawQuestion>(([, text, correct, options], index) => [
+    jailtonProvaoQuestions.length + marceloProvaoQuestions.length + emersonProvaoQuestions.length + index + 1,
     text,
     correct,
     options,
@@ -879,6 +929,14 @@ rawSubjects.unshift({
       options,
     ]),
   ],
+});
+
+rawSubjects.unshift({
+  id: "local-provao-12-06",
+  name: "Provão 12/06",
+  teacher_name: "Jailton + Marcelo + Emerson + Rinaldo",
+  description: "Provão com todas as questões cadastradas dos instrutores Jailton, Marcelo, Emerson e Rinaldo.",
+  questions: provao1206Questions,
 });
 
 rawSubjects.unshift({
