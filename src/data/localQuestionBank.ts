@@ -877,7 +877,6 @@ const marceloProvaoQuestions = rawSubjects.find(subject => subject.id === "local
 const emersonProvaoQuestions = rawSubjects.find(subject => subject.id === "local-emerson-incendio-seguranca-patrimonial")?.questions ?? [];
 const rinaldoProvaoQuestions = rawSubjects.find(subject => subject.id === "local-rinaldo-portugues")?.questions ?? [];
 const mandarinoProvaoQuestions = rawSubjects.find(subject => subject.id === "local-leandro-transito")?.questions ?? [];
-const grativolProvaoQuestions = rawSubjects.find(subject => subject.id === "local-grativol-sociologia-violencia")?.questions ?? [];
 const provao0906Questions: RawQuestion[] = [
   ...sergioSilvaProva0906Questions.map<RawQuestion>(([, text, correct, options], index) => [
     index + 1,
@@ -929,7 +928,7 @@ const provao1206Questions: RawQuestion[] = [
     correct,
     options,
   ]),
-  ...grativolProvaoQuestions.map<RawQuestion>(([, text, correct, options], index) => [
+  ...marcioProvaoQuestions.map<RawQuestion>(([, text, correct, options], index) => [
     jailtonProvaoQuestions.length + marceloProvaoQuestions.length + emersonProvaoQuestions.length + rinaldoProvaoQuestions.length + mandarinoProvaoQuestions.length + index + 1,
     text,
     correct,
@@ -1011,15 +1010,15 @@ rawSubjects.unshift({
 rawSubjects.unshift({
   id: "local-provao-12-06",
   name: "Provão 13/06",
-  teacher_name: "Jailton + Marcelo + Emerson + Rinaldo + Mandarino + Grativol",
-  description: "Provão com todas as questões cadastradas dos instrutores Jailton, Marcelo, Emerson, Rinaldo, Mandarino e Grativol.",
+  teacher_name: "Jailton + Marcelo + Emerson + Rinaldo + Mandarino + Márcio",
+  description: "Provão com todas as questões cadastradas dos instrutores Jailton, Marcelo, Emerson, Rinaldo, Mandarino e Márcio.",
   questions: provao1206Questions,
 });
 
 rawSubjects.unshift({
   id: "local-provao-13-06-reduzidas",
   name: "Provão 13/06 - Reduzidas",
-  teacher_name: "Jailton + Marcelo + Emerson + Rinaldo + Mandarino + Grativol",
+  teacher_name: "Jailton + Marcelo + Emerson + Rinaldo + Mandarino + Márcio",
   description: "Versão reduzida do Provão 13/06 com as questões selecionadas pelos números informados.",
   questions: provao1306ReduzidasQuestions,
 });
