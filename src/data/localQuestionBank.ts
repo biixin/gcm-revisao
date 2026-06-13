@@ -934,6 +934,12 @@ const provao1206Questions: RawQuestion[] = [
     correct,
     options,
   ]),
+  ...valerioQuestions.map<RawQuestion>(([, text, correct, options], index) => [
+    jailtonProvaoQuestions.length + marceloProvaoQuestions.length + emersonProvaoQuestions.length + rinaldoProvaoQuestions.length + mandarinoProvaoQuestions.length + marcioProvaoQuestions.length + index + 1,
+    text,
+    correct,
+    options,
+  ]),
 ];
 const provao1306ReduzidasQuestionNumbers = new Set([
   3, 8, 12, 15, 16, 18, 19, 20, 21, 22, 24, 26, 29, 30, 31, 33, 34, 35, 36, 38,
@@ -944,7 +950,7 @@ const provao1306ReduzidasQuestionNumbers = new Set([
   165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180,
   181, 182, 183, 184, 185, 186, 187, 190, 191, 192, 195, 197, 198,
 ]);
-const provao1306ReduzidasQuestions: RawQuestion[] = provao1206Questions
+const provao1306ReduzidasBaseQuestions: RawQuestion[] = provao1206Questions
   .filter(([number]) => provao1306ReduzidasQuestionNumbers.has(number))
   .map<RawQuestion>(([, text, correct, options], index) => [
     index + 1,
@@ -952,6 +958,15 @@ const provao1306ReduzidasQuestions: RawQuestion[] = provao1206Questions
     correct,
     options,
   ]);
+const provao1306ReduzidasQuestions: RawQuestion[] = [
+  ...provao1306ReduzidasBaseQuestions,
+  ...valerioQuestions.map<RawQuestion>(([, text, correct, options], index) => [
+    provao1306ReduzidasBaseQuestions.length + index + 1,
+    text,
+    correct,
+    options,
+  ]),
+];
 const provao1106Questions: RawQuestion[] = [
   ...valerioQuestions.map<RawQuestion>(([, text, correct, options], index) => [
     index + 1,
@@ -1010,16 +1025,16 @@ rawSubjects.unshift({
 rawSubjects.unshift({
   id: "local-provao-12-06",
   name: "Provão 13/06",
-  teacher_name: "Jailton + Marcelo + Emerson + Rinaldo + Mandarino + Márcio",
-  description: "Provão com todas as questões cadastradas dos instrutores Jailton, Marcelo, Emerson, Rinaldo, Mandarino e Márcio.",
+  teacher_name: "Jailton + Marcelo + Emerson + Rinaldo + Mandarino + Márcio + Valério",
+  description: "Provão com todas as questões cadastradas dos instrutores Jailton, Marcelo, Emerson, Rinaldo, Mandarino, Márcio e Valério.",
   questions: provao1206Questions,
 });
 
 rawSubjects.unshift({
   id: "local-provao-13-06-reduzidas",
   name: "Provão 13/06 - Reduzidas",
-  teacher_name: "Jailton + Marcelo + Emerson + Rinaldo + Mandarino + Márcio",
-  description: "Versão reduzida do Provão 13/06 com as questões selecionadas pelos números informados.",
+  teacher_name: "Jailton + Marcelo + Emerson + Rinaldo + Mandarino + Márcio + Valério",
+  description: "Versão reduzida do Provão 13/06 com as questões selecionadas pelos números informados e as questões do Valério.",
   questions: provao1306ReduzidasQuestions,
 });
 
