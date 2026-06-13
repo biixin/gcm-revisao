@@ -11,7 +11,7 @@ import { loadProgressAnswers, resetProgressAnswers } from '../lib/localProgress'
 import { librasInverseSubjectId, librasSubjectId } from '../data/librasCards';
 
 const logoUrl = 'https://firebasestorage.googleapis.com/v0/b/gcm-caxias-17535.firebasestorage.app/o/logo-gcm-sem%20fundo.png?alt=media&token=abcb7bfd-cecf-4101-87b9-83f942235ebd';
-const featuredSubjectIds = ['local-provao-09-06', 'local-provao-11-06', 'local-provao-12-06'];
+const featuredSubjectIds = ['local-provao-09-06', 'local-provao-11-06', 'local-provao-12-06', 'local-provao-13-06-reduzidas'];
 
 type SortMode = 'default' | 'difficulty';
 type SubjectDifficulty = 'URUBU' | 'ALTA' | 'FÁCIL';
